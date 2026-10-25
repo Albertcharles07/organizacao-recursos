@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rules.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">organizacao-recursos</a> &gt; <a href="index.source.html" class="el_package">br.edu.recursos</a> &gt; <span class="el_source">Rules.java</span></div><h1>Rules.java</h1><pre class="source lang-java linenums">package br.edu.recursos;
+
+import java.time.Instant;
+import java.util.Set;
+
+public final class Rules {
+  private Rules() {}
+
+  public static void interval(Instant start, Instant end) {
+<span class="fc bfc" id="L10" title="All 6 branches covered.">    if (start == null || end == null || !end.isAfter(start))</span>
+<span class="fc" id="L11">      throw new IllegalArgumentException(&quot;O término deve ser posterior ao início.&quot;);</span>
+<span class="fc" id="L12">  }</span>
+
+  public static boolean overlaps(Instant a, Instant b, Instant c, Instant d) {
+<span class="fc" id="L15">    interval(a, b);</span>
+<span class="fc" id="L16">    interval(c, d);</span>
+<span class="fc bfc" id="L17" title="All 4 branches covered.">    return a.isBefore(d) &amp;&amp; c.isBefore(b);</span>
+  }
+
+  public static boolean transition(String from, String to) {
+<span class="fc bfc" id="L21" title="All 4 branches covered.">    return switch (from) {</span>
+<span class="fc" id="L22">      case &quot;SOLICITADA&quot; -&gt; Set.of(&quot;APROVADA&quot;, &quot;REJEITADA&quot;, &quot;CANCELADA&quot;).contains(to);</span>
+<span class="fc" id="L23">      case &quot;APROVADA&quot; -&gt; Set.of(&quot;EM_USO&quot;, &quot;CANCELADA&quot;, &quot;NAO_COMPARECEU&quot;).contains(to);</span>
+<span class="fc" id="L24">      case &quot;EM_USO&quot; -&gt; to.equals(&quot;CONCLUIDA&quot;);</span>
+<span class="fc" id="L25">      default -&gt; false;</span>
+    };
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

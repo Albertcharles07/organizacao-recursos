@@ -1,0 +1,8 @@
+target/
+.env
+node_modules/
+playwright-report/
+test-results/
+*.jtl
+load/results/
+load/local.properties

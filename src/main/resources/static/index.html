@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Reserva • Organização de recursos</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <section id="login">
+      <div class="login-art">
+        <span class="brand">◈ RESERVA</span>
+        <h1>O espaço certo.<br />Na hora certa.</h1>
+        <p>
+          Salas, pessoas e equipamentos.<br />Uma agenda para organizar tudo.
+        </p>
+        <div class="art-card">
+          <span>ORGANIZAÇÃO DE RECURSOS</span
+          ><strong>Menos conflitos.<br />Mais possibilidades.</strong
+          ><small>Projeto semestral · Java 21</small>
+        </div>
+      </div>
+      <form id="login-form" class="login-form">
+        <span class="eyebrow">BEM-VINDO DE VOLTA</span>
+        <h2>Acesse sua conta</h2>
+        <p>Entre para consultar a agenda e gerenciar reservas.</p>
+        <label
+          >Usuário<input
+            name="username"
+            autocomplete="username"
+            required /></label
+        ><label
+          >Senha<input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required /></label
+        ><button>Entrar na plataforma →</button
+        ><small
+          >Primeiro acesso: use o administrador configurado na
+          instalação.</small
+        >
+      </form>
+    </section>
+    <div id="shell" hidden>
+      <aside>
+        <span class="brand">◈ RESERVA</span
+        ><small>ORGANIZAÇÃO DE RECURSOS</small>
+        <nav id="nav"></nav>
+        <div class="account">
+          <strong id="who"></strong><span id="role"></span
+          ><button id="logout" class="ghost">Sair da conta</button>
+        </div>
+      </aside>
+      <main>
+        <header>
+          <div>
+            <span class="eyebrow">SEU CAMPUS, ORGANIZADO</span>
+            <h1 id="page-title">Reservas</h1>
+          </div>
+          <span class="pill">● Agenda compartilhada</span>
+        </header>
+        <div id="content"></div>
+        <footer>
+          Reserva · Intervalos sem sobreposição · Horários exibidos no seu fuso
+          local
+        </footer>
+      </main>
+    </div>
+    <div id="message" role="status" aria-live="polite" hidden></div>
+    <dialog id="dialog">
+      <form id="editor">
+        <div class="dialog-head">
+          <h2 id="dialog-title"></h2>
+          <button type="button" id="close" class="ghost" aria-label="Fechar">
+            ✕
+          </button>
+        </div>
+        <div id="fields"></div>
+        <button id="save">Salvar</button>
+      </form>
+    </dialog>
+  </body>
+</html>

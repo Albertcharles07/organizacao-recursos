@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookingService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">organizacao-recursos</a> &gt; <a href="index.source.html" class="el_package">br.edu.recursos</a> &gt; <span class="el_source">BookingService.java</span></div><h1>BookingService.java</h1><pre class="source lang-java linenums">package br.edu.recursos;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class BookingService {
+  private final JdbcTemplate db;
+  private final org.springframework.context.ApplicationEventPublisher events;
+
+  public BookingService(
+<span class="nc" id="L17">      JdbcTemplate db, org.springframework.context.ApplicationEventPublisher events) {</span>
+<span class="nc" id="L18">    this.db = db;</span>
+<span class="nc" id="L19">    this.events = events;</span>
+<span class="nc" id="L20">  }</span>
+
+  public static Timestamp ts(Instant t) {
+<span class="nc" id="L23">    return Timestamp.from(t);</span>
+  }
+
+  public void audit(String actor, String action, Long id, String detail) {
+<span class="nc" id="L27">    db.update(</span>
+        &quot;insert into audit(actor,action,entity_id,detail) values (?,?,?,?)&quot;,
+        actor,
+        action,
+        id,
+        detail);
+<span class="nc" id="L33">  }</span>
+
+  public Map&lt;String, Object&gt; get(long id) {
+<span class="nc" id="L36">    return db.queryForList(&quot;select * from booking where id=?&quot;, id).stream()</span>
+<span class="nc" id="L37">        .findFirst()</span>
+<span class="nc" id="L38">        .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Reserva não encontrada.&quot;));</span>
+  }
+
+  private List&lt;Long&gt; lockResources(List&lt;Long&gt; ids) {
+<span class="nc" id="L42">    var sorted = ids.stream().distinct().sorted().toList();</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">    if (sorted.isEmpty()) throw new IllegalArgumentException(&quot;Selecione ao menos um recurso.&quot;);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">    for (Long id : sorted) {</span>
+<span class="nc" id="L45">      var rows = db.queryForList(&quot;select * from resource where id=? for update&quot;, id);</span>
+<span class="nc bnc" id="L46" title="All 4 branches missed.">      if (rows.isEmpty() || !Boolean.TRUE.equals(rows.get(0).get(&quot;active&quot;)))</span>
+<span class="nc" id="L47">        throw new IllegalArgumentException(&quot;Recurso inexistente ou desativado.&quot;);</span>
+<span class="nc" id="L48">    }</span>
+<span class="nc" id="L49">    return sorted;</span>
+  }
+
+  @Transactional
+  public long save(
+      Long id, String actor, String title, Instant start, Instant end, List&lt;Long&gt; resources) {
+<span class="nc" id="L55">    Rules.interval(start, end);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">    if (!start.isAfter(Instant.now()))</span>
+<span class="nc" id="L57">      throw new IllegalArgumentException(&quot;A reserva deve começar no futuro.&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">    if (id != null) {</span>
+<span class="nc" id="L59">      db.queryForList(&quot;select id from booking where id=? for update&quot;, id);</span>
+<span class="nc" id="L60">      var old = get(id);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">      if (!actor.equals(old.get(&quot;owner&quot;)))</span>
+<span class="nc" id="L62">        throw new AccessDeniedException(&quot;Somente o solicitante pode alterar sua reserva.&quot;);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">      if (!Set.of(&quot;SOLICITADA&quot;, &quot;APROVADA&quot;).contains(old.get(&quot;state&quot;))</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">          || !((Timestamp) old.get(&quot;start_at&quot;)).toInstant().isAfter(Instant.now()))</span>
+<span class="nc" id="L65">        throw new IllegalArgumentException(&quot;Reserva iniciada ou encerrada não pode ser alterada.&quot;);</span>
+    }
+<span class="nc" id="L67">    var ids = lockResources(resources);</span>
+<span class="nc" id="L68">    boolean restricted = false;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">    for (long resource : ids) {</span>
+<span class="nc" id="L70">      restricted |=</span>
+<span class="nc" id="L71">          Boolean.TRUE.equals(</span>
+<span class="nc" id="L72">              db.queryForObject(</span>
+<span class="nc" id="L73">                  &quot;select restricted from resource where id=?&quot;, Boolean.class, resource));</span>
+<span class="nc" id="L74">    }</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">    String state = restricted ? &quot;SOLICITADA&quot; : &quot;APROVADA&quot;;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">    if (id == null)</span>
+<span class="nc" id="L77">      id =</span>
+<span class="nc" id="L78">          db.queryForObject(</span>
+              &quot;insert into booking(owner,title,start_at,end_at,state) values (?,?,?,?,?) returning&quot;
+                  + &quot; id&quot;,
+              Long.class,
+              actor,
+              title,
+<span class="nc" id="L84">              ts(start),</span>
+<span class="nc" id="L85">              ts(end),</span>
+              state);
+    else {
+<span class="nc" id="L88">      db.update(&quot;update allocation set active=false,current_version=false where booking_id=?&quot;, id);</span>
+<span class="nc" id="L89">      db.update(</span>
+          &quot;update booking set title=?,start_at=?,end_at=?,state=? where id=?&quot;,
+          title,
+<span class="nc" id="L92">          ts(start),</span>
+<span class="nc" id="L93">          ts(end),</span>
+          state,
+          id);
+    }
+<span class="nc bnc" id="L97" title="All 2 branches missed.">    for (long resource : ids)</span>
+<span class="nc" id="L98">      db.update(</span>
+          &quot;insert into allocation(resource_id,booking_id,start_at,end_at) values (?,?,?,?)&quot;,
+<span class="nc" id="L100">          resource,</span>
+          id,
+<span class="nc" id="L102">          ts(start),</span>
+<span class="nc" id="L103">          ts(end));</span>
+<span class="nc" id="L104">    audit(</span>
+        actor,
+        &quot;RESERVA_SALVA&quot;,
+        id,
+        &quot;Estado=&quot; + state + &quot;; início=&quot; + start + &quot;; fim=&quot; + end + &quot;; recursos=&quot; + ids);
+<span class="nc" id="L109">    notify(id, actor, &quot;Reserva #&quot; + id + &quot;: &quot; + state);</span>
+<span class="nc" id="L110">    return id;</span>
+  }
+
+  @Transactional
+  public void transition(long id, String target, String actor, boolean responsible) {
+<span class="nc" id="L115">    db.queryForList(&quot;select id from booking where id=? for update&quot;, id);</span>
+<span class="nc" id="L116">    var b = get(id);</span>
+<span class="nc" id="L117">    String from = (String) b.get(&quot;state&quot;);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">    if (target.equals(&quot;CANCELADA&quot;)) {</span>
+<span class="nc bnc" id="L119" title="All 4 branches missed.">      if (!actor.equals(b.get(&quot;owner&quot;)) &amp;&amp; !responsible)</span>
+<span class="nc" id="L120">        throw new AccessDeniedException(&quot;Reserva de outro solicitante.&quot;);</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">      if (!((Timestamp) b.get(&quot;start_at&quot;)).toInstant().isAfter(Instant.now()))</span>
+<span class="nc" id="L122">        throw new IllegalArgumentException(&quot;Reserva iniciada não pode ser cancelada.&quot;);</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">    } else if (!responsible)</span>
+<span class="nc" id="L124">      throw new AccessDeniedException(&quot;Somente responsáveis alteram este estado.&quot;);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">    if (!Rules.transition(from, target))</span>
+<span class="nc" id="L126">      throw new IllegalArgumentException(&quot;Transição de estado inválida.&quot;);</span>
+<span class="nc" id="L127">    Instant start = ((Timestamp) b.get(&quot;start_at&quot;)).toInstant(),</span>
+<span class="nc" id="L128">        end = ((Timestamp) b.get(&quot;end_at&quot;)).toInstant();</span>
+<span class="nc bnc" id="L129" title="All 6 branches missed.">    if (target.equals(&quot;EM_USO&quot;) &amp;&amp; (Instant.now().isBefore(start) || !Instant.now().isBefore(end)))</span>
+<span class="nc" id="L130">      throw new IllegalArgumentException(&quot;Uso permitido somente no intervalo reservado.&quot;);</span>
+<span class="nc bnc" id="L131" title="All 4 branches missed.">    if (target.equals(&quot;NAO_COMPARECEU&quot;) &amp;&amp; Instant.now().isBefore(start))</span>
+<span class="nc" id="L132">      throw new IllegalArgumentException(&quot;A reserva ainda não começou.&quot;);</span>
+<span class="nc bnc" id="L133" title="All 4 branches missed.">    if (target.equals(&quot;APROVADA&quot;) &amp;&amp; !start.isAfter(Instant.now()))</span>
+<span class="nc" id="L134">      throw new IllegalArgumentException(&quot;A solicitação expirou.&quot;);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    if (target.equals(&quot;CONCLUIDA&quot;)</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        &amp;&amp; db.queryForObject(</span>
+                &quot;select count(*) from material_movement m where m.booking_id=? and&quot;
+                    + &quot; m.kind='RETIRADA' and not exists(select 1 from material_movement d where&quot;
+                    + &quot; d.booking_id=m.booking_id and d.resource_id=m.resource_id and&quot;
+                    + &quot; d.kind='DEVOLUCAO')&quot;,
+                Long.class,
+<span class="nc" id="L142">                id)</span>
+            &gt; 0)
+<span class="nc" id="L144">      throw new IllegalArgumentException(&quot;Registre a devolução dos materiais antes de concluir.&quot;);</span>
+<span class="nc" id="L145">    db.update(&quot;update booking set state=? where id=?&quot;, target, id);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">    if (Set.of(&quot;CANCELADA&quot;, &quot;REJEITADA&quot;, &quot;NAO_COMPARECEU&quot;).contains(target))</span>
+<span class="nc" id="L147">      db.update(&quot;update allocation set active=false where booking_id=?&quot;, id);</span>
+<span class="nc" id="L148">    audit(actor, &quot;ESTADO&quot;, id, from + &quot; → &quot; + target);</span>
+<span class="nc" id="L149">    notify(id, (String) b.get(&quot;owner&quot;), &quot;Reserva #&quot; + id + &quot;: &quot; + target);</span>
+<span class="nc" id="L150">  }</span>
+
+  private void notify(long id, String owner, String message) {
+<span class="nc" id="L153">    long nid =</span>
+<span class="nc" id="L154">        db.queryForObject(</span>
+            &quot;insert into notification(booking_id,recipient,message) values (?,?,?) returning id&quot;,
+            Long.class,
+<span class="nc" id="L157">            id,</span>
+            owner,
+            message);
+<span class="nc" id="L160">    events.publishEvent(new NotificationDelivery.Event(nid, id));</span>
+<span class="nc" id="L161">  }</span>
+
+  @Transactional
+  public void maintenance(long resource, Instant start, Instant end, String reason, String actor) {
+<span class="nc" id="L165">    Rules.interval(start, end);</span>
+<span class="nc" id="L166">    lockResources(List.of(resource));</span>
+<span class="nc" id="L167">    db.update(</span>
+        &quot;insert into allocation(resource_id,start_at,end_at,reason) values (?,?,?,?)&quot;,
+<span class="nc" id="L169">        resource,</span>
+<span class="nc" id="L170">        ts(start),</span>
+<span class="nc" id="L171">        ts(end),</span>
+        reason);
+<span class="nc" id="L173">    audit(actor, &quot;MANUTENCAO&quot;, resource, reason + &quot;; &quot; + start + &quot; / &quot; + end);</span>
+<span class="nc" id="L174">  }</span>
+
+  @Transactional
+  public void movement(long id, long resource, String kind, String actor) {
+<span class="nc" id="L178">    db.queryForList(&quot;select id from booking where id=? for update&quot;, id);</span>
+<span class="nc" id="L179">    var b = get(id);</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">    if (!b.get(&quot;state&quot;).equals(&quot;EM_USO&quot;))</span>
+<span class="nc" id="L181">      throw new IllegalArgumentException(&quot;A reserva deve estar em uso.&quot;);</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">    if (db.queryForObject(</span>
+            &quot;select count(*) from allocation a join resource r on r.id=a.resource_id where&quot;
+                + &quot; a.booking_id=? and a.resource_id=? and a.active and r.type='MATERIAL'&quot;,
+            Long.class,
+<span class="nc" id="L186">            id,</span>
+<span class="nc" id="L187">            resource)</span>
+<span class="nc" id="L188">        == 0) throw new IllegalArgumentException(&quot;Material não pertence à reserva.&quot;);</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">    if (!Set.of(&quot;RETIRADA&quot;, &quot;DEVOLUCAO&quot;).contains(kind))</span>
+<span class="nc" id="L190">      throw new IllegalArgumentException(&quot;Movimento inválido.&quot;);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">    if (kind.equals(&quot;DEVOLUCAO&quot;)</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        &amp;&amp; db.queryForObject(</span>
+                &quot;select count(*) from material_movement where booking_id=? and resource_id=? and&quot;
+                    + &quot; kind='RETIRADA'&quot;,
+                Long.class,
+<span class="nc" id="L196">                id,</span>
+<span class="nc" id="L197">                resource)</span>
+<span class="nc" id="L198">            == 0) throw new IllegalArgumentException(&quot;Registre a retirada primeiro.&quot;);</span>
+<span class="nc" id="L199">    db.update(</span>
+        &quot;insert into material_movement(booking_id,resource_id,kind,actor) values (?,?,?,?)&quot;,
+<span class="nc" id="L201">        id,</span>
+<span class="nc" id="L202">        resource,</span>
+        kind,
+        actor);
+<span class="nc" id="L205">    audit(actor, kind, id, &quot;Material #&quot; + resource);</span>
+<span class="nc" id="L206">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,72 @@
+name: Qualidade
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Testes unitários, integração e cobertura
+        run: mvn -B verify
+      - name: Guardar evidências mesmo em falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testes-e-cobertura
+          path: |
+            target/surefire-reports/
+            target/failsafe-reports/
+            target/site/jacoco/
+      - name: Metas de cobertura (80% linhas e 70% branches)
+        run: mvn -B jacoco:check@coverage-gate -Pquality
+      - name: SonarCloud e quality gate
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
+        run: |
+          test -n "$SONAR_TOKEN" || { echo 'Configure SONAR_TOKEN antes da entrega'; exit 1; }
+          mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.qualitygate.wait=true
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      DB_PASSWORD: ci-database-password-123
+      ADMIN_PASSWORD: e2e-admin-password-123
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: docker compose up -d --build
+      - run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/api/csrf > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs app
+          exit 1
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e
+          path: |
+            playwright-report/
+            test-results/
+      - if: always()
+        run: docker compose down -v

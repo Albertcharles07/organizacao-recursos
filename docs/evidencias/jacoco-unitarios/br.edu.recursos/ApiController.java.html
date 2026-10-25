@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">organizacao-recursos</a> &gt; <a href="index.source.html" class="el_package">br.edu.recursos</a> &gt; <span class="el_source">ApiController.java</span></div><h1>ApiController.java</h1><pre class="source lang-java linenums">package br.edu.recursos;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import java.time.Instant;
+import java.util.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping(&quot;/api&quot;)
+public class ApiController {
+  private final JdbcTemplate db;
+  private final BookingService service;
+  private final PasswordEncoder encoder;
+
+<span class="nc" id="L22">  public ApiController(JdbcTemplate db, BookingService service, PasswordEncoder encoder) {</span>
+<span class="nc" id="L23">    this.db = db;</span>
+<span class="nc" id="L24">    this.service = service;</span>
+<span class="nc" id="L25">    this.encoder = encoder;</span>
+<span class="nc" id="L26">  }</span>
+
+<span class="nc" id="L28">  public record Reservation(</span>
+      @NotBlank @Size(max = 160) String title,
+      @NotNull Instant start,
+      @NotNull Instant end,
+      @NotEmpty @Size(max = 30) List&lt;@NotNull @Positive Long&gt; resources) {}
+
+<span class="nc" id="L34">  public record Resource(</span>
+      @NotBlank @Size(max = 120) String name,
+      @Pattern(regexp = &quot;SALA|PROFESSOR|MATERIAL&quot;) @NotNull String type,
+      @Min(1) int capacity,
+      @NotBlank @Size(max = 120) String location,
+      @NotNull @Size(max = 120) String competence,
+      boolean restricted,
+      boolean active) {}
+
+<span class="nc" id="L43">  public record UserInput(</span>
+      @Pattern(regexp = &quot;[a-zA-Z0-9._-]{3,80}&quot;) @NotNull String username,
+      @Size(min = 12, max = 72) @NotNull String password,
+      @Pattern(regexp = &quot;SOLICITANTE|RESPONSAVEL|ADMIN&quot;) @NotNull String role) {}
+
+<span class="nc" id="L48">  public record Maintenance(</span>
+      @Positive long resource,
+      @NotNull Instant start,
+      @NotNull Instant end,
+      @NotBlank @Size(max = 160) String reason) {}
+
+<span class="nc" id="L54">  public record State(@NotBlank String state) {}</span>
+
+<span class="nc" id="L56">  public record Movement(</span>
+      @Positive long resource, @Pattern(regexp = &quot;RETIRADA|DEVOLUCAO&quot;) @NotNull String kind) {}
+
+  private boolean has(Authentication a, String role) {
+<span class="nc" id="L60">    return a.getAuthorities().stream().anyMatch(x -&gt; x.getAuthority().equals(&quot;ROLE_&quot; + role));</span>
+  }
+
+  private void admin(Authentication a) {
+<span class="nc bnc" id="L64" title="All 2 branches missed.">    if (!has(a, &quot;ADMIN&quot;)) throw new AccessDeniedException(&quot;Operação exclusiva do administrador.&quot;);</span>
+<span class="nc" id="L65">  }</span>
+
+  private void responsible(Authentication a) {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">    if (!has(a, &quot;RESPONSAVEL&quot;))</span>
+<span class="nc" id="L69">      throw new AccessDeniedException(&quot;Operação exclusiva do responsável.&quot;);</span>
+<span class="nc" id="L70">  }</span>
+
+  @GetMapping(&quot;/csrf&quot;)
+  public Map&lt;String, String&gt; csrf(CsrfToken t) {
+<span class="nc" id="L74">    return Map.of(&quot;token&quot;, t.getToken(), &quot;headerName&quot;, t.getHeaderName());</span>
+  }
+
+  @GetMapping(&quot;/me&quot;)
+  public Map&lt;String, Object&gt; me(Authentication a) {
+<span class="nc" id="L79">    return Map.of(&quot;username&quot;, a.getName(), &quot;roles&quot;, a.getAuthorities());</span>
+  }
+
+  @GetMapping(&quot;/resources&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; resources(
+      @RequestParam(defaultValue = &quot;&quot;) String type,
+      @RequestParam(defaultValue = &quot;&quot;) String location,
+      @RequestParam(defaultValue = &quot;&quot;) String competence,
+      @RequestParam(defaultValue = &quot;1&quot;) int capacity,
+      @RequestParam(required = false) Instant start,
+      @RequestParam(required = false) Instant end,
+      @RequestParam(defaultValue = &quot;false&quot;) boolean includeInactive,
+      Authentication authentication) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    if (includeInactive) admin(authentication);</span>
+<span class="nc bnc" id="L93" title="All 6 branches missed.">    if ((start == null) != (end == null))</span>
+<span class="nc" id="L94">      throw new IllegalArgumentException(&quot;Informe início e fim juntos.&quot;);</span>
+    String sql =
+        &quot;select r.* from resource r where &quot;
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            + (includeInactive ? &quot;true&quot; : &quot;r.active&quot;)</span>
+            + &quot; and r.type like ? and lower(r.location) like ?&quot;
+            + &quot; and lower(r.competence) like ? and r.capacity&gt;=?&quot;;
+<span class="nc" id="L100">    List&lt;Object&gt; args =</span>
+        new ArrayList&lt;&gt;(
+<span class="nc" id="L102">            List.of(</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                type.isEmpty() ? &quot;%&quot; : type,</span>
+<span class="nc" id="L104">                &quot;%&quot; + location.toLowerCase(Locale.ROOT) + &quot;%&quot;,</span>
+<span class="nc" id="L105">                &quot;%&quot; + competence.toLowerCase(Locale.ROOT) + &quot;%&quot;,</span>
+<span class="nc" id="L106">                capacity));</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">    if (start != null) {</span>
+<span class="nc" id="L108">      Rules.interval(start, end);</span>
+<span class="nc" id="L109">      sql +=</span>
+          &quot; and not exists(select 1 from allocation a where a.resource_id=r.id and a.active and&quot;
+              + &quot; a.start_at&lt;? and a.end_at&gt;?)&quot;;
+<span class="nc" id="L112">      args.add(BookingService.ts(end));</span>
+<span class="nc" id="L113">      args.add(BookingService.ts(start));</span>
+    }
+<span class="nc" id="L115">    return db.queryForList(sql + &quot; order by r.type,r.name&quot;, args.toArray());</span>
+  }
+
+  @PostMapping(&quot;/resources&quot;)
+  @Transactional
+  public Map&lt;String, Long&gt; resource(@Valid @RequestBody Resource r, Authentication a) {
+<span class="nc" id="L121">    admin(a);</span>
+<span class="nc" id="L122">    long id =</span>
+<span class="nc" id="L123">        db.queryForObject(</span>
+            &quot;insert into resource(name,type,capacity,location,competence,restricted,active) values&quot;
+                + &quot; (?,?,?,?,?,?,?) returning id&quot;,
+            Long.class,
+<span class="nc" id="L127">            r.name(),</span>
+<span class="nc" id="L128">            r.type(),</span>
+<span class="nc" id="L129">            r.capacity(),</span>
+<span class="nc" id="L130">            r.location(),</span>
+<span class="nc" id="L131">            r.competence(),</span>
+<span class="nc" id="L132">            r.restricted(),</span>
+<span class="nc" id="L133">            r.active());</span>
+<span class="nc" id="L134">    service.audit(a.getName(), &quot;RECURSO_CRIADO&quot;, id, r.toString());</span>
+<span class="nc" id="L135">    return Map.of(&quot;id&quot;, id);</span>
+  }
+
+  @PutMapping(&quot;/resources/{id}&quot;)
+  @Transactional
+  public void editResource(
+      @PathVariable long id, @Valid @RequestBody Resource r, Authentication a) {
+<span class="nc" id="L142">    admin(a);</span>
+<span class="nc" id="L143">    var previous = db.queryForList(&quot;select * from resource where id=? for update&quot;, id);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">    if (previous.isEmpty()) throw new IllegalArgumentException(&quot;Recurso não encontrado.&quot;);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">    if (db.queryForObject(</span>
+            &quot;select count(*) from allocation where resource_id=? and active and end_at&gt;now()&quot;,
+            Long.class,
+<span class="nc" id="L148">            id)</span>
+        &gt; 0)
+<span class="nc" id="L150">      throw new IllegalArgumentException(</span>
+          &quot;Encerre ou cancele as alocações futuras antes de editar o recurso.&quot;);
+<span class="nc" id="L152">    db.update(</span>
+        &quot;update resource set name=?,type=?,capacity=?,location=?,competence=?,restricted=?,active=?&quot;
+            + &quot; where id=?&quot;,
+<span class="nc" id="L155">        r.name(),</span>
+<span class="nc" id="L156">        r.type(),</span>
+<span class="nc" id="L157">        r.capacity(),</span>
+<span class="nc" id="L158">        r.location(),</span>
+<span class="nc" id="L159">        r.competence(),</span>
+<span class="nc" id="L160">        r.restricted(),</span>
+<span class="nc" id="L161">        r.active(),</span>
+<span class="nc" id="L162">        id);</span>
+<span class="nc" id="L163">    service.audit(a.getName(), &quot;RECURSO_EDITADO&quot;, id, &quot;Antes=&quot; + previous + &quot;; depois=&quot; + r);</span>
+<span class="nc" id="L164">  }</span>
+
+  @GetMapping(&quot;/users&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; users(Authentication a) {
+<span class="nc" id="L168">    admin(a);</span>
+<span class="nc" id="L169">    return db.queryForList(&quot;select id,username,role,enabled from app_user order by id&quot;);</span>
+  }
+
+  @PostMapping(&quot;/users&quot;)
+  @Transactional
+  public void user(@Valid @RequestBody UserInput u, Authentication a) {
+<span class="nc" id="L175">    admin(a);</span>
+<span class="nc" id="L176">    db.update(</span>
+        &quot;insert into app_user(username,password,role) values (?,?,?)&quot;,
+<span class="nc" id="L178">        u.username(),</span>
+<span class="nc" id="L179">        encoder.encode(u.password()),</span>
+<span class="nc" id="L180">        u.role());</span>
+<span class="nc" id="L181">    service.audit(a.getName(), &quot;USUARIO_CRIADO&quot;, null, u.username() + &quot; / &quot; + u.role());</span>
+<span class="nc" id="L182">  }</span>
+
+  @PutMapping(&quot;/users/{id}/enabled&quot;)
+  @Transactional
+  public void enable(
+      @PathVariable long id, @RequestBody Map&lt;String, Boolean&gt; body, Authentication a) {
+<span class="nc" id="L188">    admin(a);</span>
+<span class="nc" id="L189">    Boolean enabled = body.get(&quot;enabled&quot;);</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">    if (enabled == null) throw new IllegalArgumentException(&quot;Informe enabled.&quot;);</span>
+<span class="nc" id="L191">    var users = db.queryForList(&quot;select username from app_user where id=?&quot;, id);</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">    if (users.isEmpty()) throw new IllegalArgumentException(&quot;Usuário não encontrado.&quot;);</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">    if (a.getName().equals(users.get(0).get(&quot;username&quot;)))</span>
+<span class="nc" id="L194">      throw new IllegalArgumentException(&quot;Não desative sua própria conta.&quot;);</span>
+<span class="nc" id="L195">    db.update(&quot;update app_user set enabled=? where id=?&quot;, enabled, id);</span>
+<span class="nc" id="L196">    service.audit(a.getName(), &quot;USUARIO_ATIVO&quot;, id, enabled.toString());</span>
+<span class="nc" id="L197">  }</span>
+
+  @GetMapping(&quot;/bookings&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; bookings(Authentication a) {
+<span class="nc bnc" id="L201" title="All 2 branches missed.">    String where = has(a, &quot;SOLICITANTE&quot;) ? &quot; where b.owner=?&quot; : &quot;&quot;;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">    Object[] args = has(a, &quot;SOLICITANTE&quot;) ? new Object[] {a.getName()} : new Object[] {};</span>
+<span class="nc" id="L203">    return db.queryForList(</span>
+        &quot;select b.*, coalesce((select string_agg(r.name, ', ' order by r.name) from allocation al&quot;
+            + &quot; join resource r on r.id=al.resource_id where al.booking_id=b.id and&quot;
+            + &quot; al.current_version),'') as resources from booking b&quot;
+            + where
+            + &quot; order by b.start_at desc&quot;,
+        args);
+  }
+
+  @PostMapping(&quot;/bookings&quot;)
+  public Map&lt;String, Long&gt; create(@Valid @RequestBody Reservation r, Authentication a) {
+<span class="nc" id="L214">    return Map.of(</span>
+<span class="nc" id="L215">        &quot;id&quot;, service.save(null, a.getName(), r.title(), r.start(), r.end(), r.resources()));</span>
+  }
+
+  @PutMapping(&quot;/bookings/{id}&quot;)
+  public Map&lt;String, Long&gt; update(
+      @PathVariable long id, @Valid @RequestBody Reservation r, Authentication a) {
+<span class="nc" id="L221">    return Map.of(</span>
+<span class="nc" id="L222">        &quot;id&quot;, service.save(id, a.getName(), r.title(), r.start(), r.end(), r.resources()));</span>
+  }
+
+  @PostMapping(&quot;/bookings/{id}/state&quot;)
+  public void state(@PathVariable long id, @Valid @RequestBody State s, Authentication a) {
+<span class="nc" id="L227">    service.transition(id, s.state(), a.getName(), has(a, &quot;RESPONSAVEL&quot;));</span>
+<span class="nc" id="L228">  }</span>
+
+  @PostMapping(&quot;/bookings/{id}/movements&quot;)
+  public void movement(@PathVariable long id, @Valid @RequestBody Movement m, Authentication a) {
+<span class="nc" id="L232">    responsible(a);</span>
+<span class="nc" id="L233">    service.movement(id, m.resource(), m.kind(), a.getName());</span>
+<span class="nc" id="L234">  }</span>
+
+  @GetMapping(&quot;/movements&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; movements(Authentication a) {
+<span class="nc" id="L238">    responsible(a);</span>
+<span class="nc" id="L239">    return db.queryForList(&quot;select * from material_movement order by id desc&quot;);</span>
+  }
+
+  @GetMapping(&quot;/maintenance&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; maintenance() {
+<span class="nc" id="L244">    return db.queryForList(</span>
+        &quot;select a.*,r.name from allocation a join resource r on r.id=a.resource_id where booking_id&quot;
+            + &quot; is null and a.active order by start_at&quot;);
+  }
+
+  @PostMapping(&quot;/maintenance&quot;)
+  public void maintenance(@Valid @RequestBody Maintenance m, Authentication a) {
+<span class="nc" id="L251">    admin(a);</span>
+<span class="nc" id="L252">    service.maintenance(m.resource(), m.start(), m.end(), m.reason(), a.getName());</span>
+<span class="nc" id="L253">  }</span>
+
+  @DeleteMapping(&quot;/maintenance/{id}&quot;)
+  @Transactional
+  public void removeMaintenance(@PathVariable long id, Authentication a) {
+<span class="nc" id="L258">    admin(a);</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">    if (db.update(</span>
+<span class="nc" id="L260">            &quot;update allocation set active=false where id=? and booking_id is null and active&quot;, id)</span>
+<span class="nc" id="L261">        != 1) throw new IllegalArgumentException(&quot;Bloqueio não encontrado.&quot;);</span>
+<span class="nc" id="L262">    service.audit(a.getName(), &quot;MANUTENCAO_REMOVIDA&quot;, id, &quot;Bloqueio desativado&quot;);</span>
+<span class="nc" id="L263">  }</span>
+
+  @GetMapping(&quot;/audit&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; audit(Authentication a) {
+<span class="nc bnc" id="L267" title="All 4 branches missed.">    if (!has(a, &quot;ADMIN&quot;) &amp;&amp; !has(a, &quot;RESPONSAVEL&quot;))</span>
+<span class="nc" id="L268">      throw new AccessDeniedException(&quot;Sem permissão para auditoria.&quot;);</span>
+<span class="nc" id="L269">    return db.queryForList(&quot;select * from audit order by id desc limit 500&quot;);</span>
+  }
+
+  @GetMapping(&quot;/notifications&quot;)
+  public List&lt;Map&lt;String, Object&gt;&gt; notifications(Authentication a) {
+<span class="nc" id="L274">    return db.queryForList(</span>
+<span class="nc" id="L275">        &quot;select * from notification where recipient=? order by id desc limit 100&quot;, a.getName());</span>
+  }
+
+  @GetMapping(&quot;/reports&quot;)
+  public Map&lt;String, Object&gt; reports(Authentication a) {
+<span class="nc bnc" id="L280" title="All 4 branches missed.">    if (!has(a, &quot;ADMIN&quot;) &amp;&amp; !has(a, &quot;RESPONSAVEL&quot;))</span>
+<span class="nc" id="L281">      throw new AccessDeniedException(&quot;Sem permissão para relatórios.&quot;);</span>
+<span class="nc" id="L282">    return Map.of(</span>
+        &quot;resources&quot;,
+<span class="nc" id="L284">        db.queryForList(</span>
+            &quot;select r.id,r.name,r.type,count(b.id) as reservations,coalesce(sum(extract(epoch from&quot;
+                + &quot; (al.end_at-al.start_at))/3600) filter(where b.id is not null),0) as hours from&quot;
+                + &quot; resource r left join allocation al on al.resource_id=r.id and al.active left&quot;
+                + &quot; join booking b on b.id=al.booking_id and b.state in&quot;
+                + &quot; ('APROVADA','EM_USO','CONCLUIDA') group by r.id order by r.name&quot;),
+        &quot;avoidedConflicts&quot;,
+<span class="nc" id="L291">        db.queryForObject(&quot;select count(*) from avoided_conflict&quot;, Long.class));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
