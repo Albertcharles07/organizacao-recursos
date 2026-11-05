@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+organizacao-recursos,br.edu.recursos,ApiController.Movement,0,9,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,NotificationDelivery.Event,0,9,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,NotificationGateway,5,47,1,3,3,16,1,3,0,2
+organizacao-recursos,br.edu.recursos,NotificationDelivery,27,17,3,1,3,7,2,2,0,2
+organizacao-recursos,br.edu.recursos,ApiController.Reservation,0,15,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,Rules,0,60,0,14,0,11,0,11,0,3
+organizacao-recursos,br.edu.recursos,ApiController.Maintenance,0,15,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,ApiController.UserInput,0,12,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,ActiveAccountFilter,0,55,3,7,0,15,3,4,0,2
+organizacao-recursos,br.edu.recursos,ApiController.Resource,0,24,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,Application,5,3,0,0,2,1,1,1,1,1
+organizacao-recursos,br.edu.recursos,ApiController,25,631,5,37,2,109,5,41,0,25
+organizacao-recursos,br.edu.recursos,SecurityConfig,17,192,3,3,1,35,5,18,2,18
+organizacao-recursos,br.edu.recursos,ApiErrors,7,77,3,7,1,17,3,8,0,6
+organizacao-recursos,br.edu.recursos,ApiController.State,0,6,0,0,0,1,0,1,0,1
+organizacao-recursos,br.edu.recursos,BookingService,20,745,6,62,4,114,6,39,0,11
