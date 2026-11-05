@@ -19,7 +19,7 @@ Preencher a coluna "No commit da tag" com o resultado da execução do CI da tag
 
 | Critério | Meta | Em 05/11/2026 | No commit da tag | Atendido? |
 | --- | --- | --- | --- | --- |
-| Testes automatizados | 100% passando | 208 de 208 (fork, `be6fda0`) | | |
+| Testes automatizados | 100% passando | 208 de 208 (fork, `2801221`) | | |
 | Cobertura de linhas | ≥ 80% | 97,65% | | |
 | Cobertura de branches | ≥ 70% | 92,53% | | |
 | Bugs e vulnerabilidades críticas (SonarCloud) | 0 | Não medido (sem token) | | |

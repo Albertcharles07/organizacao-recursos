@@ -4,7 +4,7 @@ Todas as evidências da entrega, com o lugar onde cada uma está. Na entrega fin
 
 | Evidência | Onde está | Situação em 05/11/2026 |
 | --- | --- | --- |
-| Execução do CI (testes, cobertura, E2E e carga) | Aba Actions do repositório, workflow "Qualidade"; anotação "Resumo dos testes" de cada execução | 208 testes passando, commit `be6fda0` (fork) |
+| Execução do CI (testes, cobertura, E2E e carga) | Aba Actions do repositório, workflow "Qualidade"; anotação "Resumo dos testes" de cada execução | 208 testes, E2E e carga passando, commit `2801221` (fork) |
 | Relatório do JaCoCo | Artifact `testes-e-cobertura` de cada execução; cópias em `docs/evidencias/ci-qualidade-1/` e `ci-qualidade-2/` | 97,65% linhas, 92,53% branches |
 | Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI | **Pendente**: `SONAR_TOKEN` |
 | Resultado da carga | `docs/performance/resultado-01.md`; artifact `carga-jmeter` | Aprovado |
