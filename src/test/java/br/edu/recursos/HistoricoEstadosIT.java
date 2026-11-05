@@ -152,6 +152,8 @@ class HistoricoEstadosIT {
   @DisplayName("Rollback: falha depois de gravar o histórico não deixa registro órfão")
   void falhaNaTransacaoNaoDeixaHistoricoOrfao() {
     long id = service.save(null, "ana", "Projetor", inicio, fim, List.of(material));
+    // A tabela audit não é zerada entre os testes (só aceita inserção), então compara antes e depois.
+    int auditoriaAntes = auditoriaDeEstado(id);
     // Simula uma falha no último passo da transição (a notificação), depois do histórico gravado.
     db.execute(
         "create or replace function teste_falha_notificacao() returns trigger language plpgsql as"
@@ -169,10 +171,12 @@ class HistoricoEstadosIT {
 
     assertEquals("SOLICITADA", service.get(id).get("state"));
     assertEquals(1, historico(id).size(), "só o registro da criação pode existir");
-    assertEquals(
-        0,
-        db.queryForObject(
-            "select count(*) from audit where entity_id=? and action='ESTADO'", Integer.class, id));
+    assertEquals(auditoriaAntes, auditoriaDeEstado(id), "auditoria da transição desfeita junto");
+  }
+
+  int auditoriaDeEstado(long reserva) {
+    return db.queryForObject(
+        "select count(*) from audit where entity_id=? and action='ESTADO'", Integer.class, reserva);
   }
 
   @Test
