@@ -20,6 +20,9 @@ jobs:
           cache: maven
       - name: Testes unitários, integração e cobertura
         run: mvn -B verify
+      - name: Resumo dos testes e da cobertura
+        if: always()
+        run: python3 .github/scripts/resumo_testes.py
       - name: Guardar evidências mesmo em falha
         if: always()
         uses: actions/upload-artifact@v4
