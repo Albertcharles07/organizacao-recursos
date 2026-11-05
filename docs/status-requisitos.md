@@ -1,6 +1,6 @@
 # Status dos requisitos
 
-Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o código, os testes e a RTM (`docs/rtm.md`). Um item só é **feito** quando existe teste que falharia se a regra fosse quebrada; nas regras críticas isso foi confirmado pela mutação manual (`docs/testes/mutacao-manual.md`). Execução de referência: CI do commit `0170b7b`, 202 testes passando; `FiltrosRecursosIT` foi adicionado depois e roda no CI do mesmo PR de validação.
+Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o código, os testes e a RTM (`docs/rtm.md`). Um item só é **feito** quando existe teste que falharia se a regra fosse quebrada; nas regras críticas isso foi confirmado pela mutação manual (`docs/testes/mutacao-manual.md`). Execução de referência: CI do commit `2801221`, 208 testes passando, E2E e carga aprovados.
 
 ## Requisitos funcionais
 
@@ -28,7 +28,7 @@ Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o có
 | Término posterior ao início | Feito | `RulesTest.invalidIntervals`, `CHECK(end_at>start_at)`; mutação 10 | Intervalo inválido gravado |
 | Reserva iniciada não pode ser excluída nem cancelada | Feito | `startedBookingAndMaterialLifecycle`, `HistoricoEstadosIT.reservaIniciadaNaoPodeSerCanceladaNemExcluida` | Perda de histórico |
 | Toda mudança de estado gera auditoria | Feito | `HistoricoEstadosIT.cicloCompletoGeraUmRegistroPorMudanca`, `falhaNaTransacaoNaoDeixaHistoricoOrfao`; mutação 08 | Rastreio incompleto |
-| Cobertura 80% linhas e 70% branches | Feito | 97,65% e 92,53% no CI do commit `0170b7b` | Nota de cobertura |
+| Cobertura 80% linhas e 70% branches | Feito | 97,65% e 92,53% no CI do commit `2801221` | Nota de cobertura |
 | Desempenho e robustez sob concorrência | Feito | `docs/performance/resultado-01.md` (p95 até 487 ms com 100 usuários) | Sem evidência de desempenho |
 | Zero bugs e vulnerabilidades críticas (SonarCloud) | **Faltando** | Passo do SonarCloud falha por falta do `SONAR_TOKEN` (defeito P03) | Limitador de nota: pipeline sempre vermelho |
 | Revisão por pares | **Parcial** | PRs abertos aguardando revisão | Critério de autoria e revisão |

@@ -14,6 +14,18 @@ Executado em **05/11/2026** pelo job `load` do GitHub Actions, commit `0170b7b` 
 
 A meta proposta no plano era p95 abaixo de 2000 ms e nenhum erro 5xx: atendida em todas as rodadas. O p95 sobe com o número de usuários (191 → 366 → 487 ms) porque os pedidos esperam o bloqueio do recurso (`select ... for update`) e a verificação da restrição de exclusão, que serializam as reservas do mesmo recurso.
 
+## Repetição
+
+O job `load` rodou de novo no commit `2801221`, numa máquina diferente do GitHub Actions (2 vCPU Intel Xeon 6973P-C), com o mesmo resultado de consistência:
+
+| Usuários simultâneos | 200 (aceita) | 409 (conflito) | Outros códigos | p95 da reserva | Reservas gravadas no banco | Resultado |
+| --- | --- | --- | --- | --- | --- | --- |
+| 10 | 1 | 9 | 0 | 203 ms | 1 | OK |
+| 50 | 1 | 49 | 0 | 353 ms | 1 | OK |
+| 100 | 1 | 99 | 0 | 471 ms | 1 | OK |
+
+Entre as duas execuções, o p95 variou no máximo 16 ms por rodada.
+
 ## Como foi executado
 
 - Cada rodada cria um recurso novo com `load/prepare.py`, autentica cada usuário virtual (token CSRF e login) e dispara todas as reservas juntas, com uma barreira de sincronização (`SyncTimer`) que espera até 30 s.

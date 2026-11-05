@@ -10,11 +10,11 @@ Atualizado em **05/11/2026** com as execuções do GitHub Actions. Substitui a v
 
 | Métrica | Meta | Resultado | Evidência |
 | --- | --- | --- | --- |
-| Cobertura de linhas | 80% | **97,65%** (374 de 383) | CI do commit `be6fda0` |
-| Cobertura de branches | 70% | **92,53%** (161 de 174) | CI do commit `be6fda0` |
-| Testes automatizados | 100% passando | **208 de 208** | CI do commit `be6fda0` |
+| Cobertura de linhas | 80% | **97,65%** (374 de 383) | CI do commit `2801221` |
+| Cobertura de branches | 70% | **92,53%** (161 de 174) | CI do commit `2801221` |
+| Testes automatizados | 100% passando | **208 de 208** | CI do commit `2801221` |
 | Mutações das regras críticas detectadas | 100% | **10 de 10** | `docs/testes/mutacao-manual.md` |
-| Dupla reserva sob carga | 1 reserva por rodada | **1 em 1** com 10, 50 e 100 usuários; p95 até 487 ms | `docs/performance/resultado-01.md` |
+| Dupla reserva sob carga | 1 reserva por rodada | **1 em 1** com 10, 50 e 100 usuários, em duas execuções; p95 até 487 ms | `docs/performance/resultado-01.md` |
 | Requisitos críticos na RTM com evidência | 100% | **100%** | `docs/rtm.md` |
 | Bugs e vulnerabilidades críticas | 0 | **Não medido**: SonarCloud sem `SONAR_TOKEN` | Defeito P03 |
 
@@ -22,7 +22,8 @@ Atualizado em **05/11/2026** com as execuções do GitHub Actions. Substitui a v
 
 | Execução | Data | Commit | Testes | Linhas | Branches | Observação |
 | --- | --- | --- | --- | --- | --- | --- |
-| Validação no fork (PR #2 do fork) | 05/11/2026 | `be6fda0` | 208, 0 falhas | 97,65% | 92,53% | Referência atual; inclui todos os PRs da fila |
+| Validação no fork (PR #2 do fork) | 05/11/2026 | `2801221` | 208, 0 falhas | 97,65% | 92,53% | **Referência atual**: inclui todos os PRs da fila; E2E e carga aprovados |
+| Validação no fork | 05/11/2026 | `be6fda0` | 208, 0 falhas | 97,65% | 92,53% | Job de carga falhou ao baixar o JMeter (defeito D08), corrigido |
 | Validação no fork, com carga | 05/11/2026 | `0170b7b` | 202, 0 falhas | 97,65% | 92,53% | Primeira execução do job `load`: aprovado |
 | Validação no fork | 05/11/2026 | `6649bdc` | 187, 1 falha | — | — | Falha no próprio teste de rollback (defeito D07), corrigida |
 | CI do grupo, PR #3 (D05) | 05/11/2026 | `bb48527` | — | — | — | E2E aprovado: regressão do D05 |
@@ -71,7 +72,7 @@ Tabela da última execução com o relatório por classe disponível. Depois del
 
 ## Defeitos
 
-Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, P01 e P02. Abertos: **P03** (SonarCloud sem token), **P04** (revisão por pares em andamento), **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
+Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Abertos: **P03** (SonarCloud sem token), **P04** (revisão por pares em andamento), **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
 
 ## Pendências para a liberação
 

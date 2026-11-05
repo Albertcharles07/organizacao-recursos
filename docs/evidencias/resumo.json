@@ -2,9 +2,9 @@
   "atualizadoEm": "2026-11-05",
   "execucoes": [
     {
-      "id": "fork-validacao-be6fda0",
+      "id": "fork-validacao-2801221",
       "origem": "GitHub Actions no fork lucasrmagalhaess/organizacao-recursos, PR de validação #2 (branch auditoria/fechamento)",
-      "commit": "be6fda0",
+      "commit": "2801221",
       "data": "2026-11-05",
       "ambiente": "ubuntu-24.04, Java 21, PostgreSQL 16 via Testcontainers",
       "testes": {
@@ -28,9 +28,23 @@
         }
       },
       "jobs": {
-        "tests": "testes e meta de cobertura passaram; SonarCloud falhou (sem token)"
+        "tests": "testes e meta de cobertura passaram; SonarCloud falhou (sem token)",
+        "e2e": "passou",
+        "load": "passou: p95 203/353/471 ms com 10/50/100 usuários, 1 reserva por rodada"
       },
       "observacao": "Resultados lidos das anotações do passo 'Resumo dos testes e da cobertura'."
+    },
+    {
+      "id": "fork-validacao-be6fda0",
+      "commit": "be6fda0",
+      "data": "2026-11-05",
+      "testes": {
+        "total": 208,
+        "falhas": 0
+      },
+      "jobs": {
+        "load": "falhou ao baixar o JMeter (defeito D08)"
+      }
     },
     {
       "id": "fork-validacao-0170b7b",
