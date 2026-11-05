@@ -74,7 +74,7 @@ O registro completo está em `docs/DEFEITOS.md`. Mudanças desta revisão:
 | Configurar `SONAR_TOKEN`, `SONAR_PROJECT_KEY` e `SONAR_ORGANIZATION` | Dono do repositório | CI sempre vermelho; meta "0 bugs críticos" sem evidência |
 | Tornar o repositório público | Dono do repositório | Professor não consegue clonar: limitador "aplicação não executa" |
 | Executar o JMeter e registrar `docs/performance/resultado-01.md` | Equipe | Sem evidência de desempenho (RNF03) |
-| Auditoria estruturada (estado anterior e novo, motivo, `Clock`, rollback) | Auditoria | RF10 incompleto em relação à Aula 11 |
+| Executar no CI o histórico estruturado (`HistoricoEstadosTest` e `HistoricoEstadosIT`) | Auditoria | RF10 e RC03 sem evidência de execução |
 | Mutação manual (`docs/testes/mutacao-manual.md`) | Auditoria | RTM sem prova de que os testes detectam a quebra das regras |
 | Revisão por pares em todos os PRs | Equipe | Critério de autoria e revisão |
 
