@@ -30,4 +30,4 @@ O resumo retorna código 1 se a quantidade aceita/conflitante não for a esperad
 
 ## Resultado
 
-**PENDENTE DE EXECUÇÃO.** Não há JTL real nem resultado de carga produzido neste ambiente. O plano e o verificador estão entregues para gerar essa evidência. Não transformar meta em resultado na apresentação.
+**Executado em 05/11/2026 pelo job `load` do CI: aprovado nas três rodadas** (10, 50 e 100 usuários; 1 reserva aceita por rodada; p95 até 487 ms). Detalhes, ambiente e limitações em `docs/performance/resultado-01.md`. O job `load` em `.github/workflows/ci.yml` repete o teste a cada execução do CI.

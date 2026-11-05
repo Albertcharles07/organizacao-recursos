@@ -2,16 +2,93 @@
   "atualizadoEm": "2026-11-05",
   "execucoes": [
     {
+      "id": "fork-validacao-be6fda0",
+      "origem": "GitHub Actions no fork lucasrmagalhaess/organizacao-recursos, PR de validação #2 (branch auditoria/fechamento)",
+      "commit": "be6fda0",
+      "data": "2026-11-05",
+      "ambiente": "ubuntu-24.04, Java 21, PostgreSQL 16 via Testcontainers",
+      "testes": {
+        "total": 208,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "unitarios": 32,
+        "integracao": 176
+      },
+      "cobertura": {
+        "linhas": {
+          "cobertas": 374,
+          "total": 383,
+          "percentual": 97.65
+        },
+        "branches": {
+          "cobertos": 161,
+          "total": 174,
+          "percentual": 92.53
+        }
+      },
+      "jobs": {
+        "tests": "testes e meta de cobertura passaram; SonarCloud falhou (sem token)"
+      },
+      "observacao": "Resultados lidos das anotações do passo 'Resumo dos testes e da cobertura'."
+    },
+    {
+      "id": "fork-validacao-0170b7b",
+      "origem": "GitHub Actions no fork, PR de validação #2",
+      "commit": "0170b7b",
+      "data": "2026-11-05",
+      "testes": {
+        "total": 202,
+        "falhas": 0
+      },
+      "cobertura": {
+        "linhas": {
+          "percentual": 97.65
+        },
+        "branches": {
+          "percentual": 92.53
+        }
+      },
+      "jobs": {
+        "e2e": "passou",
+        "load": "passou: 10, 50 e 100 usuários, 1 reserva aceita por rodada, p95 191/366/487 ms"
+      },
+      "documento": "docs/performance/resultado-01.md"
+    },
+    {
       "id": "ci-qualidade-1",
       "origem": "GitHub Actions, workflow Qualidade, execução #1 (push na main)",
       "commit": "fff753c",
       "data": "2026-10-25",
       "ambiente": "ubuntu-latest (Linux 6.17 Azure), Java 21.0.12.1, PostgreSQL 16 via Testcontainers",
-      "testes": {"total": 44, "falhas": 0, "erros": 0, "ignorados": 0,
-                 "porClasse": {"RulesTest": 22, "NotificationGatewayTest": 4, "ResourceApiIT": 17, "BlackBoxIT": 1}},
-      "cobertura": {"linhas": {"cobertas": 325, "total": 348, "percentual": 93.39},
-                    "branches": {"cobertos": 123, "total": 158, "percentual": 77.85}},
-      "jobs": {"tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)", "e2e": "passou"},
+      "testes": {
+        "total": 44,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "porClasse": {
+          "RulesTest": 22,
+          "NotificationGatewayTest": 4,
+          "ResourceApiIT": 17,
+          "BlackBoxIT": 1
+        }
+      },
+      "cobertura": {
+        "linhas": {
+          "cobertas": 325,
+          "total": 348,
+          "percentual": 93.39
+        },
+        "branches": {
+          "cobertos": 123,
+          "total": 158,
+          "percentual": 77.85
+        }
+      },
+      "jobs": {
+        "tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)",
+        "e2e": "passou"
+      },
       "pasta": "docs/evidencias/ci-qualidade-1/"
     },
     {
@@ -20,11 +97,35 @@
       "commit": "00c121f",
       "data": "2026-11-05",
       "ambiente": "ubuntu-latest (Ubuntu 26.04, Linux 7.0 Azure), Java 21.0.13, PostgreSQL 16 via Testcontainers",
-      "testes": {"total": 159, "falhas": 0, "erros": 0, "ignorados": 0,
-                 "porClasse": {"RulesTest": 22, "NotificationGatewayTest": 4, "ResourceApiIT": 17, "BlackBoxIT": 1, "AutorizacaoMatrizIT": 115}},
-      "cobertura": {"linhas": {"cobertas": 332, "total": 348, "percentual": 95.40},
-                    "branches": {"cobertos": 134, "total": 158, "percentual": 84.81}},
-      "jobs": {"tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)", "e2e": "falhou: defeito D05 (Playwright sem suporte ao Ubuntu 26.04)"},
+      "testes": {
+        "total": 159,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "porClasse": {
+          "RulesTest": 22,
+          "NotificationGatewayTest": 4,
+          "ResourceApiIT": 17,
+          "BlackBoxIT": 1,
+          "AutorizacaoMatrizIT": 115
+        }
+      },
+      "cobertura": {
+        "linhas": {
+          "cobertas": 332,
+          "total": 348,
+          "percentual": 95.4
+        },
+        "branches": {
+          "cobertos": 134,
+          "total": 158,
+          "percentual": 84.81
+        }
+      },
+      "jobs": {
+        "tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)",
+        "e2e": "falhou: defeito D05 (Playwright sem suporte ao Ubuntu 26.04)"
+      },
       "pasta": "docs/evidencias/ci-qualidade-2/"
     },
     {
@@ -33,7 +134,10 @@
       "commit": "bb48527",
       "data": "2026-11-05",
       "ambiente": "ubuntu-24.04",
-      "jobs": {"tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)", "e2e": "passou (regressão do D05)"}
+      "jobs": {
+        "tests": "falhou somente no passo SonarCloud (SONAR_TOKEN ausente)",
+        "e2e": "passou (regressão do D05)"
+      }
     },
     {
       "id": "local-2026-10-23",
@@ -43,7 +147,23 @@
       "pasta": "docs/evidencias/local-2026-10-23/"
     }
   ],
-  "metas": {"linhas": 80, "branches": 70, "situacao": "atingidas no CI (95,40% e 84,81%)"},
-  "pendentes": ["SonarCloud e quality gate", "JMeter", "repositório público", "tag v1.0.0-rc1"],
-  "decisao": "NAO_LIBERADO_AINDA"
+  "metas": {
+    "linhas": 80,
+    "branches": 70,
+    "situacao": "atingidas no CI (97,65% e 92,53%)"
+  },
+  "pendentes": [
+    "SonarCloud e quality gate",
+    "repositório público",
+    "CI completo no repositório do grupo no commit da tag v1.0.0-rc1",
+    "revisão por pares dos PRs"
+  ],
+  "decisao": "NAO_LIBERADO_AINDA",
+  "mutacaoManual": {
+    "data": "2026-11-05",
+    "detectadas": 10,
+    "total": 10,
+    "documento": "docs/testes/mutacao-manual.md",
+    "evidencia": "PRs de rascunho #3 a #12 no fork, fechados sem merge"
+  }
 }

@@ -98,10 +98,27 @@ jobs:
           done
           docker compose logs app
           exit 1
+      - name: Cache do JMeter
+        id: cache-jmeter
+        uses: actions/cache@v4
+        with:
+          path: apache-jmeter-${{ env.JMETER_VERSION }}
+          key: jmeter-${{ env.JMETER_VERSION }}
       - name: Instalar JMeter
+        if: steps.cache-jmeter.outputs.cache-hit != 'true'
         run: |
-          curl -fsSL "https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz" | tar xz
-          echo "$PWD/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
+          arquivo="apache-jmeter-${JMETER_VERSION}.tgz"
+          for base in https://archive.apache.org/dist https://dlcdn.apache.org https://downloads.apache.org; do
+            url="$base/jmeter/binaries/$arquivo"
+            echo "Baixando $url"
+            if curl -fsSL --retry 3 --retry-delay 5 --retry-all-errors -o "$arquivo" "$url" && tar tzf "$arquivo" > /dev/null; then
+              tar xzf "$arquivo" && rm "$arquivo" && exit 0
+            fi
+          done
+          echo "::error title=JMeter::Não foi possível baixar o JMeter ${JMETER_VERSION} de nenhum espelho"
+          exit 1
+      - name: Colocar JMeter no PATH
+        run: echo "$PWD/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
       - name: Rodadas de carga (10, 50 e 100 usuários)
         run: |
           mkdir -p load/results
