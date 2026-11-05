@@ -162,6 +162,12 @@ class AutorizacaoMatrizIT {
     CENARIOS.put("M26", c -> get("/api/audit"));
     CENARIOS.put("M27", c -> get("/api/notifications"));
     CENARIOS.put("M28", c -> get("/api/reports"));
+    CENARIOS.put(
+        "M29",
+        c ->
+            get("/api/relatorios/utilizacao")
+                .param("inicio", c.inicio.toString())
+                .param("fim", c.fim.toString()));
   }
 
   static MockHttpServletRequestBuilder json(MockHttpServletRequestBuilder b, Object body) {
@@ -322,7 +328,7 @@ class AutorizacaoMatrizIT {
   @Test
   void todaLinhaDaMatrizTemCenarioETodoCenarioTemLinha() throws Exception {
     var ids = linhasDaMatriz().stream().map(Linha::id).toList();
-    assertEquals(28, ids.size(), "A matriz deve ter 28 operações");
+    assertEquals(29, ids.size(), "A matriz deve ter 29 operações");
     assertEquals(new TreeSet<>(CENARIOS.keySet()), new TreeSet<>(ids));
     assertEquals(ids.size(), new HashSet<>(ids).size(), "IDs repetidos na matriz");
   }
