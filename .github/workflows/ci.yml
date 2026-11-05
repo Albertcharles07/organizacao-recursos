@@ -8,7 +8,7 @@ permissions:
   contents: read
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,7 +41,7 @@ jobs:
           test -n "$SONAR_TOKEN" || { echo 'Configure SONAR_TOKEN antes da entrega'; exit 1; }
           mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.qualitygate.wait=true
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       DB_PASSWORD: ci-database-password-123
       ADMIN_PASSWORD: e2e-admin-password-123
