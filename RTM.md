@@ -4,7 +4,7 @@ Status de rastreabilidade: todos os 14 requisitos funcionais e as regras crític
 
 | ID | Requisito | Risco | Implementação | Teste/verificação | Evidência / estado |
 |---|---|---|---|---|---|
-| RF01* | Autenticação e autorização | Acesso indevido | SecurityConfig, ActiveAccountFilter, API | BlackBoxIT; inputsAndPermissions; ownerIsEnforced; bddRestrictedResource | Código pronto; execução IT pendente |
+| RF01* | Autenticação e autorização | Acesso indevido | SecurityConfig, ActiveAccountFilter, API | AutorizacaoMatrizIT (matriz em docs/seguranca/matriz-autorizacao.md: 28 operações × 4 perfis, posse); BlackBoxIT; inputsAndPermissions; ownerIsEnforced; bddRestrictedResource | Matriz e teste escritos; execução no CI pendente |
 | RF02 | Cadastros e consulta | Cadastro inconsistente | /resources e /users | adminResourceAndUserFlows; E2E | Execução IT/E2E pendente |
 | RF03 | Filtros e disponibilidade | Disponibilidade falsa | GET /resources | availabilityFiltersAndPrivacy | Execução IT pendente |
 | RF04 | Criar, alterar e cancelar | Perda de dados | BookingService.save/transition | cancelReleasesResources; failedEditRollsBack; ownerIsEnforced | Execução IT pendente |
@@ -16,7 +16,7 @@ Status de rastreabilidade: todos os 14 requisitos funcionais e as regras crític
 | RF10* | Histórico auditável | Alteração sem autoria | audit + trigger | restrictedApprovalAndAudit; auditCannotBeRewritten | IT pendente |
 | RF11 | Notificação | Falha externa compromete fluxo | notification + gateway | NotificationGatewayTest; restrictedApprovalAndAudit | WireMock executado; IT pendente |
 | RF12 | Utilização, horas, conflitos | Indicadores incorretos | GET /reports | maintenanceEndpointsAndReporting; simultaneousRequestsAcceptOnlyOne | IT pendente; conferir valores na demo |
-| RF13 | Responsividade e erros | Operação incompreensível | static + ApiErrors | E2E móvel/desktop; inputsAndPermissions | Sintaxe JS verificada; E2E pendente |
+| RF13 | Responsividade e erros | Operação incompreensível | static + ApiErrors | E2E móvel/desktop; inputsAndPermissions; AutorizacaoMatrizIT.entradasInvalidasRetornam400SemDetalhesInternos | Sintaxe JS verificada; E2E e IT pendentes |
 | RF14 | Documentação | Uso sem contrato | docs/API.md, README | Revisão por colega e BlackBoxIT | Documento entregue; revisão humana pendente |
 | RC01* | Fim > início | Intervalo inválido | Rules.interval + CHECK SQL | RulesTest.invalidIntervals | Unitário executado |
 | RC02* | Reserva iniciada não apagada | Perda de histórico | Sem DELETE; restrições de estado | startedBookingAndMaterialLifecycle; inspeção de rotas | IT pendente |
