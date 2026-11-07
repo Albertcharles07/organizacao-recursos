@@ -24,9 +24,9 @@ Execução de referência: GitHub Actions, commit `2801221` (branch `auditoria/f
 | RC02* | Reserva iniciada não pode ser excluída | Perda de histórico | Sem rota de exclusão; cancelamento recusado após o início | `startedBookingAndMaterialLifecycle`; `HistoricoEstadosIT.reservaIniciadaNaoPodeSerCanceladaNemExcluida` | — | Passou em `2801221` |
 | RC03* | Toda mudança de estado gera auditoria | Rastreio incompleto | `BookingService.history` na mesma transação | `HistoricoEstadosIT.cicloCompletoGeraUmRegistroPorMudanca`; `falhaNaTransacaoNaoDeixaHistoricoOrfao` | 08 detectada | Passou em `2801221` |
 | RNF01 | 80% de linhas e 70% de branches | Testes insuficientes | JaCoCo e perfil `quality` | `jacoco:check@coverage-gate` | — | 97,65% e 92,53% em `2801221` |
-| RNF02 | Zero bugs e vulnerabilidades críticas | Falha não detectada | SonarCloud com quality gate | Passo do SonarCloud no CI | — | **Pendente**: falta `SONAR_TOKEN` (defeito P03) |
+| RNF02 | Zero bugs e vulnerabilidades críticas | Falha não detectada | SonarCloud com quality gate no CI | Passo "SonarCloud e quality gate" do CI | — | Quality gate **aprovado** (`main`, 06/11/2026): 0 bugs, 0 vulnerabilidades críticas, cobertura 92,1% e duplicação 0,0% medidas pelo SonarCloud. 2 issues de segurança de severidade média (defeito D09), corrigidas na branch `seguranca/sql-sem-concatenacao` |
 | RNF03 | Desempenho e robustez sob concorrência | Lentidão ou falha sob carga | JMeter, timeout do webhook | Job `load`; `NotificacaoEntregaIT.apiExternaForaDoArMarcaFalhou` | 02 detectada | p95 de 487 ms com 100 usuários, 1 reserva por rodada (`docs/performance/resultado-01.md`) |
 
 `*` = requisito crítico. \*\* `Rules.overlaps` não é chamado pelo código da aplicação (defeito D06): o `RulesTest.overlap` documenta a regra, mas a proteção real de RF05 é a restrição do banco.
 
-**Cobertura de rastreabilidade crítica:** 100% dos requisitos críticos com teste executado no CI e mutação detectada. Pendente para a liberação: RNF02 (SonarCloud) e a repetição do CI no repositório do grupo no commit da tag.
+**Cobertura de rastreabilidade crítica:** 100% dos requisitos críticos com teste executado no CI e mutação detectada. Pendente para a liberação: confirmar a nota de segurança A no SonarCloud depois da correção do D09 e repetir o CI no repositório do grupo no commit da tag.

@@ -6,7 +6,7 @@ Todas as evidências da entrega, com o lugar onde cada uma está. Na entrega fin
 | --- | --- | --- |
 | Execução do CI (testes, cobertura, E2E e carga) | Aba Actions do repositório, workflow "Qualidade"; anotação "Resumo dos testes" de cada execução | 208 testes, E2E e carga passando, commit `2801221` (fork) |
 | Relatório do JaCoCo | Artifact `testes-e-cobertura` de cada execução; cópias em `docs/evidencias/ci-qualidade-1/` e `ci-qualidade-2/` | 97,65% linhas, 92,53% branches |
-| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI | **Pendente**: `SONAR_TOKEN` |
+| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI e projeto no SonarCloud | Aprovado (06/11/2026); 2 issues médias corrigidas (D09) |
 | Resultado da carga | `docs/performance/resultado-01.md`; artifact `carga-jmeter` | Aprovado |
 | Mutação manual | `docs/testes/mutacao-manual.md` | 10 de 10 detectadas |
 | Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | 30 operações × 4 perfis passando |
