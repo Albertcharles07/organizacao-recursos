@@ -15,7 +15,7 @@ A coluna "Existe e caminho" foi preenchida a partir do repositório em 05/11/202
 | --- | --- | --- | --- |
 | README com instalação reproduzível | `README.md` | | |
 | Aplicação sobe só com o README (`docker compose up --build -d`) | `compose.yaml`, `Dockerfile`, `.env.example` | | |
-| `mvn -B verify` passa | `pom.xml` | | |
+| `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `.mvn/wrapper/` | | |
 | Documentação da API | `docs/API.md` | | |
 | RTM | `docs/rtm.md` | | |
 | Diagramas de contexto, componentes e sequências críticas | `docs/ARQUITETURA.md` | | |
@@ -33,7 +33,7 @@ A coluna "Existe e caminho" foi preenchida a partir do repositório em 05/11/202
 | Decisão de qualidade | `docs/decisao-qualidade.md` | | |
 | `CHANGELOG.md` | `CHANGELOG.md` | | |
 
-Observação para a verificação: o projeto não tem Maven Wrapper (`mvnw`); o README usa `mvn`, que precisa estar instalado (Maven 3.9 ou mais novo).
+Observação para a verificação: o projeto usa o Maven Wrapper; não é preciso ter o Maven instalado, só o JDK 21.
 
 ## Bloqueadores encontrados (em ordem de gravidade)
 

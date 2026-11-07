@@ -26,6 +26,10 @@ Primeira versão candidata. Itens integrados desde a versão inicial de 25/10/20
 - `docs/seguranca/matriz-autorizacao.md`, `docs/testes/mutacao-manual.md`, `docs/performance/resultado-01.md`, `docs/status-requisitos.md`, `docs/evidencias/README.md`, `docs/entrega/checklist.md`.
 - Relatório de qualidade, RTM e defeitos atualizados com as evidências do CI; arquivos renomeados para `docs/rtm.md`, `docs/defeitos/` e `docs/relatorio-qualidade.md`.
 
+### Organização
+- Maven Wrapper (`mvnw`, `mvnw.cmd`): não é mais preciso instalar o Maven; README, documentos e CI usam `./mvnw`.
+- Modelo de PR, modelo de defeito, `CODEOWNERS` e índice `docs/README.md`.
+
 ### Pendências conhecidas
 - SonarCloud sem `SONAR_TOKEN` (P03).
 - `Rules.overlaps` não usado pela aplicação (D06).
