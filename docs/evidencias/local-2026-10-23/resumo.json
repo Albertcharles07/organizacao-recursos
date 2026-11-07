@@ -1,0 +1,46 @@
+{
+  "executionDate": "2026-10-23",
+  "reportDate": "2026-10-24",
+  "javaExecuted": "17.0.20",
+  "javaTarget": "21",
+  "springBoot": "3.5.16",
+  "unitAndWireMock": {
+    "tests": 26,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "status": "BLOCKED",
+    "cause": "Docker indisponível: falha na inicialização dos containers",
+    "classInitializationErrors": 2
+  },
+  "coverageScope": "Somente testes unitários e WireMock; integração não executou",
+  "coverage": {
+    "INSTRUCTION": {
+      "covered": 107,
+      "missed": 1916
+    },
+    "BRANCH": {
+      "covered": 17,
+      "missed": 141
+    },
+    "LINE": {
+      "covered": 27,
+      "missed": 321
+    },
+    "COMPLEXITY": {
+      "covered": 14,
+      "missed": 146
+    },
+    "METHOD": {
+      "covered": 5,
+      "missed": 75
+    },
+    "CLASS": {
+      "covered": 2,
+      "missed": 14
+    }
+  },
+  "releaseDecision": "NAO_HOMOLOGADO"
+}
