@@ -21,18 +21,20 @@ Para acompanhar erros: `docker compose logs -f app`. Para parar: `docker compose
 
 ## Alternativa com Java instalado
 
-Instale **JDK 21**, **Maven 3.9+** e Docker. Copie `.env` e configure as variáveis `DB_PASSWORD` e `ADMIN_PASSWORD` também no terminal (o Spring não lê `.env` automaticamente fora do Compose). Suba `docker compose up -d db` e execute `mvn spring-boot:run`.
+Instale **JDK 21** e Docker. Não é preciso instalar o Maven: o projeto traz o **Maven Wrapper** (`mvnw` no Linux e macOS, `mvnw.cmd` no Windows), que baixa o Maven 3.9.11 na primeira execução. Copie `.env` e configure as variáveis `DB_PASSWORD` e `ADMIN_PASSWORD` também no terminal (o Spring não lê `.env` automaticamente fora do Compose). Suba `docker compose up -d db` e execute `./mvnw spring-boot:run`.
 
 ## Testes
 
 ```sh
-mvn test                    # JUnit e WireMock; não precisa de Docker
-mvn verify                  # inclui Testcontainers e HTTP caixa-preta; precisa de Docker
-mvn verify -Pquality        # adiciona metas de 80% linhas / 70% branches
+./mvnw test                 # JUnit e WireMock; não precisa de Docker
+./mvnw -B verify            # inclui Testcontainers e HTTP caixa-preta; precisa de Docker
+./mvnw -B verify -Pquality  # adiciona metas de 80% linhas / 70% branches
 npm install
 npx playwright install chromium
 npm run test:e2e            # aplicação já deve estar em execução
 ```
+
+No Windows (PowerShell ou CMD), troque `./mvnw` por `.\mvnw.cmd`, por exemplo `.\mvnw.cmd -B verify`.
 
 Para E2E, defina `ADMIN_PASSWORD` com a mesma senha usada na aplicação. Use banco descartável: o teste cria registros reais. Resultados: `target/surefire-reports`, `target/failsafe-reports`, `target/site/jacoco/index.html` e `playwright-report/index.html`.
 
@@ -71,6 +73,7 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 - `src/main/resources/static`: interface HTML/CSS/JavaScript sem CDN.
 - `src/test`: testes JUnit, parametrizados, integração, concorrência, HTTP e WireMock.
 - `e2e`: testes Playwright; `load`: plano JMeter e verificação objetiva.
+- `docs/README.md`: índice de toda a documentação.
 - `docs/rtm.md`: requisito → risco → teste → evidência. `docs/status-requisitos.md`: situação de cada requisito.
 - `docs/API.md`, `docs/ARQUITETURA.md`, `docs/PLANO-TESTES.md`, `docs/defeitos/README.md`, `docs/relatorio-qualidade.md`, `docs/testes/mutacao-manual.md`, `docs/performance/resultado-01.md`, `docs/seguranca/matriz-autorizacao.md`.
 - `docs/Apresentacao-Recursos.pptx`: slides editáveis; `docs/APRESENTACAO.md`: roteiro da demonstração.

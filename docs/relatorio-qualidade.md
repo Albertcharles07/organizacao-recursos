@@ -87,8 +87,8 @@ Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um
 ## Como reproduzir
 
 ```sh
-mvn -B verify                                   # unidade, integração e cobertura (exige Docker)
-mvn -B jacoco:check@coverage-gate -Pquality     # metas 80/70
+./mvnw -B verify                                # unidade, integração e cobertura (exige Docker)
+./mvnw -B jacoco:check@coverage-gate -Pquality  # metas 80/70
 docker compose up -d --build && npm install && npx playwright install --with-deps chromium && npm run test:e2e
 ```
 

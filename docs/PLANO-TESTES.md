@@ -35,8 +35,8 @@ Especificação em `bdd/aprovacao.feature`, automatizada em `ResourceApiIT.bddRe
 
 ## Execução e evidências
 
-1. `mvn clean verify`: guardar surefire, failsafe e JaCoCo XML/HTML.
-2. `mvn verify -Pquality`: impor limites. Se falhar, localizar regras não cobertas e adicionar testes significativos.
+1. `./mvnw clean verify`: guardar surefire, failsafe e JaCoCo XML/HTML.
+2. `./mvnw verify -Pquality`: impor limites. Se falhar, localizar regras não cobertas e adicionar testes significativos.
 3. Subir aplicação, definir ADMIN_PASSWORD, executar Playwright e guardar HTML/trace.
 4. Executar carga conforme PLANO-CARGA.md, guardar JTL e resumo.
 5. Rodar SonarCloud e anexar link permanente com commit.
