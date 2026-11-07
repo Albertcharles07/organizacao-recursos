@@ -15,7 +15,7 @@ Status de rastreabilidade: todos os 14 requisitos funcionais e as regras crític
 | RF09 | Retirada/devolução | Material não devolvido | material_movement | startedBookingAndMaterialLifecycle | IT pendente |
 | RF10* | Histórico auditável | Alteração sem autoria | audit + trigger | restrictedApprovalAndAudit; auditCannotBeRewritten | IT pendente |
 | RF11 | Notificação | Falha externa compromete fluxo | notification + gateway | NotificationGatewayTest; restrictedApprovalAndAudit | WireMock executado; IT pendente |
-| RF12 | Utilização, horas, conflitos | Indicadores incorretos | GET /reports | maintenanceEndpointsAndReporting; simultaneousRequestsAcceptOnlyOne | IT pendente; conferir valores na demo |
+| RF12 | Utilização, horas, conflitos | Indicadores incorretos | GET /relatorios/utilizacao (por período) e GET /reports | RelatorioUtilizacaoIT (oráculo calculado à mão: período vazio, limite do período, cancelada, conflitos, 401/403); AutorizacaoMatrizIT M29; maintenanceEndpointsAndReporting | Testes escritos antes do código (TDD); execução no CI pendente |
 | RF13 | Responsividade e erros | Operação incompreensível | static + ApiErrors | E2E móvel/desktop; inputsAndPermissions; AutorizacaoMatrizIT.entradasInvalidasRetornam400SemDetalhesInternos | Sintaxe JS verificada; E2E e IT pendentes |
 | RF14 | Documentação | Uso sem contrato | docs/API.md, README | Revisão por colega e BlackBoxIT | Documento entregue; revisão humana pendente |
 | RC01* | Fim > início | Intervalo inválido | Rules.interval + CHECK SQL | RulesTest.invalidIntervals | Unitário executado |

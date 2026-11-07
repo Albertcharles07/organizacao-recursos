@@ -290,4 +290,41 @@ public class ApiController {
         "avoidedConflicts",
         db.queryForObject("select count(*) from avoided_conflict", Long.class));
   }
+
+  /**
+   * Relatório de utilização por período (RF12). Conta só a parte de cada reserva APROVADA, EM_USO
+   * ou CONCLUIDA que fica dentro de [inicio, fim). Conflitos evitados: tentativas recusadas por
+   * sobreposição cujo instante está dentro do período.
+   */
+  @GetMapping("/relatorios/utilizacao")
+  public Map<String, Object> utilizacao(
+      @RequestParam Instant inicio, @RequestParam Instant fim, Authentication a) {
+    if (!has(a, "ADMIN") && !has(a, "RESPONSAVEL"))
+      throw new AccessDeniedException("Sem permissão para relatórios.");
+    Rules.interval(inicio, fim);
+    var i = BookingService.ts(inicio);
+    var f = BookingService.ts(fim);
+    String sql =
+        "select r.id,r.name,r.type,coalesce((select round(sum(extract(epoch from"
+            + " (least(al.end_at,cast(? as timestamptz))-greatest(al.start_at,cast(? as"
+            + " timestamptz)))))/3600,2) from allocation al join booking b on b.id=al.booking_id"
+            + " where al.resource_id=r.id and al.active and b.state in"
+            + " ('APROVADA','EM_USO','CONCLUIDA') and al.start_at<cast(? as timestamptz) and"
+            + " al.end_at>cast(? as timestamptz)),0)::float8 as horas from resource r where"
+            + " r.type %s 'PROFESSOR' order by r.name,r.id";
+    var relatorio = new LinkedHashMap<String, Object>();
+    relatorio.put("inicio", inicio.toString());
+    relatorio.put("fim", fim.toString());
+    relatorio.put("recursos", db.queryForList(sql.formatted("<>"), f, i, f, i));
+    relatorio.put("professores", db.queryForList(sql.formatted("="), f, i, f, i));
+    relatorio.put(
+        "conflitosEvitados",
+        db.queryForObject(
+            "select count(*) from avoided_conflict where created_at>=cast(? as timestamptz) and"
+                + " created_at<cast(? as timestamptz)",
+            Long.class,
+            i,
+            f));
+    return relatorio;
+  }
 }
