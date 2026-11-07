@@ -20,6 +20,9 @@ jobs:
           cache: maven
       - name: Testes unitários, integração e cobertura
         run: mvn -B verify
+      - name: Resumo dos testes e da cobertura
+        if: always()
+        run: python3 .github/scripts/resumo_testes.py
       - name: Guardar evidências mesmo em falha
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,5 +71,78 @@ jobs:
           path: |
             playwright-report/
             test-results/
+      - if: always()
+        run: docker compose down -v
+  load:
+    # Teste de carga (RNF03): 10, 50 e 100 usuários disputam o mesmo recurso e horário.
+    # Esperado em cada rodada: exatamente 1 reserva aceita (200), as demais recusadas (409) e
+    # uma única alocação gravada no banco. Plano completo em docs/PLANO-CARGA.md.
+    runs-on: ubuntu-24.04
+    env:
+      DB_PASSWORD: ci-database-password-123
+      ADMIN_PASSWORD: load-admin-password-123
+      JMETER_VERSION: "5.6.3"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Subir aplicação e banco
+        run: docker compose up -d --build
+      - name: Aguardar aplicação
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8080/api/csrf > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs app
+          exit 1
+      - name: Cache do JMeter
+        id: cache-jmeter
+        uses: actions/cache@v4
+        with:
+          path: apache-jmeter-${{ env.JMETER_VERSION }}
+          key: jmeter-${{ env.JMETER_VERSION }}
+      - name: Instalar JMeter
+        if: steps.cache-jmeter.outputs.cache-hit != 'true'
+        run: |
+          arquivo="apache-jmeter-${JMETER_VERSION}.tgz"
+          for base in https://archive.apache.org/dist https://dlcdn.apache.org https://downloads.apache.org; do
+            url="$base/jmeter/binaries/$arquivo"
+            echo "Baixando $url"
+            if curl -fsSL --retry 3 --retry-delay 5 --retry-all-errors -o "$arquivo" "$url" && tar tzf "$arquivo" > /dev/null; then
+              tar xzf "$arquivo" && rm "$arquivo" && exit 0
+            fi
+          done
+          echo "::error title=JMeter::Não foi possível baixar o JMeter ${JMETER_VERSION} de nenhum espelho"
+          exit 1
+      - name: Colocar JMeter no PATH
+        run: echo "$PWD/apache-jmeter-${JMETER_VERSION}/bin" >> "$GITHUB_PATH"
+      - name: Rodadas de carga (10, 50 e 100 usuários)
+        run: |
+          mkdir -p load/results
+          lscpu | grep -E 'Model name|^CPU\(s\)' > load/results/ambiente.txt
+          free -h | head -2 >> load/results/ambiente.txt
+          for threads in 10 50 100; do
+            python3 load/prepare.py | tee load/results/preparo-$threads.txt
+            recurso=$(grep '^resourceId=' load/local.properties | cut -d= -f2)
+            jmeter -n -t load/reservas.jmx -q load/local.properties -Jthreads=$threads \
+              -l load/results/rodada-$threads.jtl -e -o load/results/html-$threads
+            python3 load/summarize.py load/results/rodada-$threads.jtl || echo "falhou" > load/results/falha-$threads
+            cp load/results/summary.json load/results/resumo-$threads.json
+            docker compose exec -T db psql -U recursos -d recursos -tAc \
+              "select count(*) from allocation where resource_id=$recurso and active and booking_id is not null" \
+              > load/results/banco-$threads.txt
+            rm -f load/local.properties
+          done
+      - name: Resumo da carga
+        if: always()
+        run: python3 .github/scripts/resumo_carga.py
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carga-jmeter
+          path: load/results/
       - if: always()
         run: docker compose down -v

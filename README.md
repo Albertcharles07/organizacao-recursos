@@ -2,7 +2,7 @@
 
 Aplicação acadêmica para salas, professores e materiais, com Java 21, Spring Boot 3.5.16, PostgreSQL 16, interface responsiva em português e autenticação por sessão.
 
-> **Estado da entrega:** código e suíte fornecidos. Veja `docs/RELATORIO-QUALIDADE.md` para evidências realmente executadas e pendências. Não é uma declaração de homologação, de cobertura atingida ou de ausência de vulnerabilidades.
+> **Estado da entrega:** a suíte automatizada roda no GitHub Actions (unidade, integração com PostgreSQL, API, E2E e carga). Veja `docs/relatorio-qualidade.md` para os resultados e as pendências, e `docs/evidencias/README.md` para o índice das evidências. Não é uma declaração de homologação nem de ausência de vulnerabilidades: a análise do SonarCloud ainda está pendente.
 
 ## Começar pelo Docker (Windows, macOS ou Linux)
 
@@ -71,8 +71,8 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 - `src/main/resources/static`: interface HTML/CSS/JavaScript sem CDN.
 - `src/test`: testes JUnit, parametrizados, integração, concorrência, HTTP e WireMock.
 - `e2e`: testes Playwright; `load`: plano JMeter e verificação objetiva.
-- `RTM.md`: requisito → risco → teste → evidência.
-- `docs/API.md`, `docs/ARQUITETURA.md`, `docs/PLANO-TESTES.md`, `docs/DEFEITOS.md`, `docs/RELATORIO-QUALIDADE.md`.
+- `docs/rtm.md`: requisito → risco → teste → evidência. `docs/status-requisitos.md`: situação de cada requisito.
+- `docs/API.md`, `docs/ARQUITETURA.md`, `docs/PLANO-TESTES.md`, `docs/defeitos/README.md`, `docs/relatorio-qualidade.md`, `docs/testes/mutacao-manual.md`, `docs/performance/resultado-01.md`, `docs/seguranca/matriz-autorizacao.md`.
 - `docs/Apresentacao-Recursos.pptx`: slides editáveis; `docs/APRESENTACAO.md`: roteiro da demonstração.
 - `docs/ENTREGA.md`: lista do que a equipe precisa executar, revisar e completar.
 

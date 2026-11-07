@@ -78,5 +78,5 @@ interna.
 | OB01 | Observação | As respostas de erro usam um corpo próprio `{"status","message"}`, e não o formato padrão `ProblemDetail` (RFC 9457) do Spring. Atende ao requisito de não expor detalhes internos. | Melhoria opcional |
 | OB02 | Observação | `GET /api/maintenance` não verifica perfil: qualquer usuário logado vê os bloqueios e o motivo. Parece intencional (o Solicitante precisa saber por que um recurso está indisponível). | Confirmar com a equipe |
 
-Se alguma célula falhar no CI, a falha vira um defeito registrado em `docs/DEFEITOS.md` **antes** da correção, e a
+Se alguma célula falhar no CI, a falha vira um defeito registrado em `docs/defeitos/README.md` **antes** da correção, e a
 correção vai em commit próprio que cita o defeito. Nenhuma célula deve ser removida ou alterada só para o teste passar.
