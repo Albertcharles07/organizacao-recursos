@@ -168,6 +168,7 @@ class AutorizacaoMatrizIT {
             get("/api/relatorios/utilizacao")
                 .param("inicio", c.inicio.toString())
                 .param("fim", c.fim.toString()));
+    CENARIOS.put("M30", c -> get("/api/bookings/{id}/history", c.reservaAprovada));
   }
 
   static MockHttpServletRequestBuilder json(MockHttpServletRequestBuilder b, Object body) {
@@ -328,7 +329,7 @@ class AutorizacaoMatrizIT {
   @Test
   void todaLinhaDaMatrizTemCenarioETodoCenarioTemLinha() throws Exception {
     var ids = linhasDaMatriz().stream().map(Linha::id).toList();
-    assertEquals(29, ids.size(), "A matriz deve ter 29 operações");
+    assertEquals(30, ids.size(), "A matriz deve ter 30 operações");
     assertEquals(new TreeSet<>(CENARIOS.keySet()), new TreeSet<>(ids));
     assertEquals(ids.size(), new HashSet<>(ids).size(), "IDs repetidos na matriz");
   }
