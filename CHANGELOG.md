@@ -30,6 +30,8 @@ Primeira versão candidata. Itens integrados desde a versão inicial de 25/10/20
 - Maven Wrapper (`mvnw`, `mvnw.cmd`): não é mais preciso instalar o Maven; README, documentos e CI usam `./mvnw`.
 - Modelo de PR, modelo de defeito, `CODEOWNERS` e índice `docs/README.md`.
 
+### Segurança
+- Consultas de `GET /resources`, `GET /bookings` e do relatório de utilização reescritas sem SQL concatenado (defeito D09, apontado pelo SonarCloud).
+
 ### Pendências conhecidas
-- SonarCloud sem `SONAR_TOKEN` (P03).
 - `Rules.overlaps` não usado pela aplicação (D06).

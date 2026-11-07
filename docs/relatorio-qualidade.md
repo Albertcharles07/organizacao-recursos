@@ -4,7 +4,7 @@ Atualizado em **05/11/2026** com as execuções do GitHub Actions. Substitui a v
 
 ## Decisão
 
-**Ainda não liberado.** A suíte completa (208 testes) passa no CI, a cobertura passou da meta com folga, o teste de carga foi aprovado e as 10 mutações das regras críticas foram detectadas. Faltam duas evidências exigidas: a análise do SonarCloud com quality gate e a execução final no repositório do grupo, que também precisa ficar público. A decisão final será registrada em `docs/decisao-qualidade.md` no commit da tag `v1.0.0-rc1`.
+**Ainda não liberado.** A suíte completa passa no CI, a cobertura passou da meta com folga, o teste de carga foi aprovado, as 10 mutações das regras críticas foram detectadas e o quality gate do SonarCloud está aprovado. Falta integrar os PRs da fila, confirmar a nota de segurança A depois da correção do D09 e repetir o CI completo no commit da tag. A decisão final será registrada em `docs/decisao-qualidade.md` no commit da tag `v1.0.0-rc1`.
 
 ## Resultado em números
 
@@ -16,7 +16,8 @@ Atualizado em **05/11/2026** com as execuções do GitHub Actions. Substitui a v
 | Mutações das regras críticas detectadas | 100% | **10 de 10** | `docs/testes/mutacao-manual.md` |
 | Dupla reserva sob carga | 1 reserva por rodada | **1 em 1** com 10, 50 e 100 usuários, em duas execuções; p95 até 487 ms | `docs/performance/resultado-01.md` |
 | Requisitos críticos na RTM com evidência | 100% | **100%** | `docs/rtm.md` |
-| Bugs e vulnerabilidades críticas | 0 | **Não medido**: SonarCloud sem `SONAR_TOKEN` | Defeito P03 |
+| Bugs e vulnerabilidades críticas | 0 | **0**; quality gate aprovado. 2 issues de segurança médias (D09), corrigidas | SonarCloud, `main`, 06/11/2026 |
+| Cobertura e duplicação no SonarCloud | — | 92,1% e 0,0% | SonarCloud, `main`, 06/11/2026 |
 
 ## Execuções
 
@@ -31,7 +32,7 @@ Atualizado em **05/11/2026** com as execuções do GitHub Actions. Substitui a v
 | CI do grupo, push na `main` | 25/10/2026 | `fff753c` | 44, 0 falhas | 93,39% | 77,85% | Primeira execução do CI |
 | Local, sem Docker | 23/10/2026 | — | 26 unitários | 7,76% | 10,76% | Integração bloqueada |
 
-Em todas as execuções do CI, o job `tests` termina vermelho só no passo do SonarCloud, por falta do token; o passo de testes e o da meta de cobertura passam. O passo "Resumo dos testes e da cobertura" publica o total e cada teste que falhar como anotação no PR. Evidências: `docs/evidencias/README.md`.
+Até 05/11/2026, o job `tests` terminava vermelho só no passo do SonarCloud, por falta do token. Desde 06/11/2026, com o SonarCloud configurado, os três checks do PR #4 do grupo (`tests`, `e2e` e SonarCloud) passam. O passo "Resumo dos testes e da cobertura" publica o total e cada teste que falhar como anotação no PR. Evidências: `docs/evidencias/README.md`.
 
 ## Testes por nível
 
@@ -51,7 +52,7 @@ Em todas as execuções do CI, o job `tests` termina vermelho só no passo do So
 | Filtros de pesquisa | `FiltrosRecursosIT` | 6 |
 | End-to-end (navegador) | `e2e/reservas.spec.js` | 2 |
 | Carga | `load/reservas.jmx` (job `load`) | 3 rodadas |
-| Análise estática | SonarCloud | **Pendente** |
+| Análise estática | SonarCloud | Quality gate aprovado |
 
 TDD: o relatório de utilização e o histórico de estados foram escritos com commits separados de teste ("red") e de implementação ("green"). BDD: `docs/bdd/aprovacao.feature`, automatizado em `ResourceApiIT.bddRestrictedResource`.
 
@@ -70,16 +71,23 @@ TDD: o relatório de utilização e o histórico de estados foram escritos com c
 
 Tabela da última execução com o relatório por classe disponível. Depois dela, `NotificacaoEntregaIT` passou a cobrir os caminhos ENVIADA e FALHOU do `NotificationDelivery`, e a cobertura global subiu para 97,65% e 92,53%. Cobertura alta não substitui a mutação manual, que confirmou que os testes detectam a quebra das regras críticas.
 
+## SonarCloud
+
+Análise da `main` em 06/11/2026 (736 linhas de código): **quality gate aprovado**, cobertura de 92,1% e duplicação de 0,0%. Foram apontadas 2 issues de segurança de severidade média, "Make sure using a dynamically formatted SQL query is safe here", em `GET /resources` e `GET /bookings`, que deixaram a nota de segurança em C. A análise da auditoria concluiu que não são exploráveis (os trechos concatenados são constantes do código e a entrada do usuário vai por parâmetro), mas o padrão foi corrigido para não virar brecha numa alteração futura (defeito D09).
+
+Análise do PR #4 (relatório de utilização): quality gate aprovado, 0 issues novas, 0 security hotspots, 100% de cobertura e 0,0% de duplicação no código novo.
+
+A cobertura do SonarCloud (92,1%) é menor que a do JaCoCo no CI (97,65%) porque as duas ferramentas contam linhas de modo diferente e o SonarCloud mediu a `main` antes dos PRs da fila.
+
 ## Defeitos
 
-Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Abertos: **P03** (SonarCloud sem token), **P04** (revisão por pares em andamento), **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
+Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Fechado também o **P03**, com o SonarCloud no CI. Corrigido e aguardando a análise do SonarCloud: **D09** (SQL montado por concatenação). Abertos: **P04** (revisão por pares em andamento), **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
 
 ## Pendências para a liberação
 
 | Pendência | Responsável | Impacto se ficar de fora |
 | --- | --- | --- |
 | Tornar o repositório público | Dono do repositório | Professor não consegue clonar: limitador "aplicação não executa" |
-| Configurar `SONAR_TOKEN`, `SONAR_PROJECT_KEY` e `SONAR_ORGANIZATION`; ler o quality gate | Dono do repositório; auditoria lê o resultado | CI sempre vermelho; meta "0 críticos" sem evidência |
 | Revisão e merge dos PRs da fila | Integrantes | Critério de revisão por pares; o trabalho fica fora da `main` |
 | Repetir o CI completo no repositório do grupo, no commit da tag | Equipe | Evidências atuais são do fork de validação |
 | Checklist de clone limpo | Integrante com Docker | Bloqueadores do README só aparecem num clone do zero |

@@ -22,14 +22,14 @@ Preencher a coluna "No commit da tag" com o resultado da execução do CI da tag
 | Testes automatizados | 100% passando | 208 de 208 (fork, `2801221`) | | |
 | Cobertura de linhas | ≥ 80% | 97,65% | | |
 | Cobertura de branches | ≥ 70% | 92,53% | | |
-| Bugs e vulnerabilidades críticas (SonarCloud) | 0 | Não medido (sem token) | | |
-| Quality gate do SonarCloud | Verde | Não executado | | |
+| Bugs e vulnerabilidades críticas (SonarCloud) | 0 | 0 (2 issues médias corrigidas, D09) | | |
+| Quality gate do SonarCloud | Verde | Aprovado | | |
 | E2E no navegador | Passando | Passando | | |
 | Dupla reserva sob carga | 1 reserva por rodada | 1 em 10, 50 e 100 usuários | | |
 | Mutações das regras críticas | Todas detectadas | 10 de 10 | | |
 | Requisitos críticos na RTM com evidência | 100% | 100% | | |
 | Aplicação sobe num clone limpo seguindo o README | Sim | Checklist ainda não feito | | |
-| Repositório público | Sim | Não (privado) | | |
+| Repositório público | Sim | Sim (desde 06/11/2026) | | |
 
 ## Riscos aceitos
 
