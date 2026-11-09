@@ -428,4 +428,32 @@ class ResourceApiIT {
     assertThrows(
         IllegalArgumentException.class, () -> service.movement(id, material, "RETIRADA", "gestor"));
   }
+
+  @Test
+  @DisplayName("Regressão D04: recurso com alocação futura ativa não pode ser editado")
+  void regressaoD04RecursoComReservaFuturaNaoPodeSerEditado() throws Exception {
+    service.save(null, "ana", "Aula", start, end, List.of(room));
+    String body =
+        json.writeValueAsString(
+            Map.of(
+                "name", "SALA",
+                "type", "SALA",
+                "capacity", 30,
+                "location", "Bloco A",
+                "competence", "",
+                "restricted", true,
+                "active", true));
+    mvc.perform(
+            put("/api/resources/" + room)
+                .with(user("admin").roles("ADMIN"))
+                .with(csrf())
+                .contentType("application/json")
+                .content(body))
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.message")
+                .value("Encerre ou cancele as alocações futuras antes de editar o recurso."));
+    assertEquals(
+        false, db.queryForObject("select restricted from resource where id=?", Boolean.class, room));
+  }
 }

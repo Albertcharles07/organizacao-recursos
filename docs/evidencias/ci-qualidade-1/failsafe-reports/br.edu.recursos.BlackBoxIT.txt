@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: br.edu.recursos.BlackBoxIT
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.60 s -- in br.edu.recursos.BlackBoxIT
