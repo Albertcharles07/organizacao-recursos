@@ -70,12 +70,12 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 
 Projeto da disciplina Qualidade de Software (Centro Universitário Senac, 2026.2).
 
-| Integrante | Papel no projeto |
-| --- | --- |
-| Carlos Daniel de Souza Gomes | |
-| Charles Elias de Araújo | Dono do repositório |
-| João Pedro Dias Araújo | |
-| Lucas Rodrigues de Magalhaes | Auditoria e testes (QA) |
+| Integrante | GitHub | Papel no projeto |
+| --- | --- | --- |
+| Carlos Daniel de Souza Gomes | [@Viuzcd660](https://github.com/Viuzcd660) | |
+| Charles Elias de Araújo | [@Albertcharles07](https://github.com/Albertcharles07) | Dono do repositório |
+| João Pedro Dias Araújo | [@joaopda03](https://github.com/joaopda03) | |
+| Lucas Rodrigues de Magalhaes | [@lucasrmagalhaess](https://github.com/lucasrmagalhaess) | Auditoria e testes (QA) |
 
 ## Estrutura e documentação
 
