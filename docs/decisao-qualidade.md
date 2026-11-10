@@ -49,6 +49,7 @@ Cada integrante escreve, com as próprias palavras, o que fez no projeto. Declar
 | Integrante | O que fez | Uso de IA |
 | --- | --- | --- |
 | Lucas Rodrigues de Magalhaes | Responsável pela auditoria e pelos testes (QA): defini o que testar, conferi os resultados no CI e no SonarCloud, registrei defeitos e evidências e integrei os PRs na main. | Usei o Claude para gerar testes, correções e documentação. Revisei e validei cada mudança no CI antes do merge. |
-| _____ | _____ | _____ |
+| 
+Carlos Daniel de Souza Gomes | Participei da organização e publicação do projeto no GitHub, da configuração e execução da aplicação com Docker e banco de dados, da verificação do funcionamento do sistema e da análise dos testes e Pull Requests para identificar problemas e melhorias. | Utilizei o ChatGPT como apoio para analisar códigos, orientar configurações, solucionar erros e revisar testes. Conferi os resultados por meio de execuções locais, logs do Docker e análise das evidências disponíveis no GitHub. |
 | _____ | _____ | _____ |
 | _____ | _____ | _____ |
