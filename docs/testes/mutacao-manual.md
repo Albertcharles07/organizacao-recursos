@@ -31,7 +31,7 @@ O número entre parênteses é o total de testes que falharam com a mutação, s
 
 1. Criar uma branch descartável a partir do commit avaliado: `git checkout -b mut/NN-nome`.
 2. Aplicar **só** a quebra da tabela acima no arquivo indicado.
-3. Rodar `mvn -B verify` (exige Docker) ou abrir um PR de rascunho e ver o CI.
+3. Rodar `./mvnw -B verify` (exige Docker) ou abrir um PR de rascunho e ver o CI.
 4. Conferir que os testes da coluna "Testes que falharam" ficaram vermelhos.
 5. Descartar a mudança: `git restore .` e `git checkout main`, sem commit da mutação na `main`.
 

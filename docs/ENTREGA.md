@@ -10,7 +10,7 @@
 
 ## Evidências que precisam ser reais
 
-- [ ] Java 21: `mvn clean verify -Pquality` aprovado.
+- [ ] Java 21: `./mvnw clean verify -Pquality` aprovado.
 - [ ] JaCoCo: >=80% linhas, >=70% branches na execução completa.
 - [ ] Teste concorrente: uma reserva, uma rejeição, sem skip.
 - [ ] E2E desktop e móvel aprovados.
