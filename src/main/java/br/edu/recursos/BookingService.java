@@ -1,6 +1,7 @@
 package br.edu.recursos;
 
 import java.sql.Timestamp;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,11 +13,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookingService {
   private final JdbcTemplate db;
   private final org.springframework.context.ApplicationEventPublisher events;
+  private final Clock clock;
+
+  static final String MOTIVO_PADRAO = "Não informado";
 
   public BookingService(
-      JdbcTemplate db, org.springframework.context.ApplicationEventPublisher events) {
+      JdbcTemplate db, org.springframework.context.ApplicationEventPublisher events, Clock clock) {
     this.db = db;
     this.events = events;
+    this.clock = clock;
+  }
+
+  private Instant now() {
+    return Instant.now(clock);
+  }
+
+  /** Registra uma mudança de estado na mesma transação de quem chamou (RF10). */
+  private void history(long booking, String actor, String from, String to, String reason) {
+    db.update(
+        "insert into booking_history(booking_id,actor,at,previous_state,new_state,reason) values"
+            + " (?,?,?,?,?,?)",
+        booking,
+        actor,
+        ts(now()),
+        from,
+        to,
+        reason == null || reason.isBlank() ? MOTIVO_PADRAO : reason.strip());
   }
 
   public static Timestamp ts(Instant t) {
@@ -53,15 +75,18 @@ public class BookingService {
   public long save(
       Long id, String actor, String title, Instant start, Instant end, List<Long> resources) {
     Rules.interval(start, end);
-    if (!start.isAfter(Instant.now()))
+    if (!start.isAfter(now()))
       throw new IllegalArgumentException("A reserva deve começar no futuro.");
+    boolean creating = id == null;
+    String previous = null;
     if (id != null) {
       db.queryForList("select id from booking where id=? for update", id);
       var old = get(id);
+      previous = (String) old.get("state");
       if (!actor.equals(old.get("owner")))
         throw new AccessDeniedException("Somente o solicitante pode alterar sua reserva.");
       if (!Set.of("SOLICITADA", "APROVADA").contains(old.get("state"))
-          || !((Timestamp) old.get("start_at")).toInstant().isAfter(Instant.now()))
+          || !((Timestamp) old.get("start_at")).toInstant().isAfter(now()))
         throw new IllegalArgumentException("Reserva iniciada ou encerrada não pode ser alterada.");
     }
     var ids = lockResources(resources);
@@ -106,19 +131,26 @@ public class BookingService {
         "RESERVA_SALVA",
         id,
         "Estado=" + state + "; início=" + start + "; fim=" + end + "; recursos=" + ids);
+    history(id, actor, previous, state, creating ? "Reserva criada" : "Reserva alterada");
     notify(id, actor, "Reserva #" + id + ": " + state);
     return id;
   }
 
   @Transactional
   public void transition(long id, String target, String actor, boolean responsible) {
+    transition(id, target, actor, responsible, null);
+  }
+
+  @Transactional
+  public void transition(
+      long id, String target, String actor, boolean responsible, String reason) {
     db.queryForList("select id from booking where id=? for update", id);
     var b = get(id);
     String from = (String) b.get("state");
     if (target.equals("CANCELADA")) {
       if (!actor.equals(b.get("owner")) && !responsible)
         throw new AccessDeniedException("Reserva de outro solicitante.");
-      if (!((Timestamp) b.get("start_at")).toInstant().isAfter(Instant.now()))
+      if (!((Timestamp) b.get("start_at")).toInstant().isAfter(now()))
         throw new IllegalArgumentException("Reserva iniciada não pode ser cancelada.");
     } else if (!responsible)
       throw new AccessDeniedException("Somente responsáveis alteram este estado.");
@@ -126,11 +158,11 @@ public class BookingService {
       throw new IllegalArgumentException("Transição de estado inválida.");
     Instant start = ((Timestamp) b.get("start_at")).toInstant(),
         end = ((Timestamp) b.get("end_at")).toInstant();
-    if (target.equals("EM_USO") && (Instant.now().isBefore(start) || !Instant.now().isBefore(end)))
+    if (target.equals("EM_USO") && (now().isBefore(start) || !now().isBefore(end)))
       throw new IllegalArgumentException("Uso permitido somente no intervalo reservado.");
-    if (target.equals("NAO_COMPARECEU") && Instant.now().isBefore(start))
+    if (target.equals("NAO_COMPARECEU") && now().isBefore(start))
       throw new IllegalArgumentException("A reserva ainda não começou.");
-    if (target.equals("APROVADA") && !start.isAfter(Instant.now()))
+    if (target.equals("APROVADA") && !start.isAfter(now()))
       throw new IllegalArgumentException("A solicitação expirou.");
     if (target.equals("CONCLUIDA")
         && db.queryForObject(
@@ -146,6 +178,7 @@ public class BookingService {
     if (Set.of("CANCELADA", "REJEITADA", "NAO_COMPARECEU").contains(target))
       db.update("update allocation set active=false where booking_id=?", id);
     audit(actor, "ESTADO", id, from + " → " + target);
+    history(id, actor, from, target, reason);
     notify(id, (String) b.get("owner"), "Reserva #" + id + ": " + target);
   }
 

@@ -51,7 +51,7 @@ public class ApiController {
       @NotNull Instant end,
       @NotBlank @Size(max = 160) String reason) {}
 
-  public record State(@NotBlank String state) {}
+  public record State(@NotBlank String state, @Size(max = 250) String reason) {}
 
   public record Movement(
       @Positive long resource, @Pattern(regexp = "RETIRADA|DEVOLUCAO") @NotNull String kind) {}
@@ -224,7 +224,18 @@ public class ApiController {
 
   @PostMapping("/bookings/{id}/state")
   public void state(@PathVariable long id, @Valid @RequestBody State s, Authentication a) {
-    service.transition(id, s.state(), a.getName(), has(a, "RESPONSAVEL"));
+    service.transition(id, s.state(), a.getName(), has(a, "RESPONSAVEL"), s.reason());
+  }
+
+  @GetMapping("/bookings/{id}/history")
+  public List<Map<String, Object>> history(@PathVariable long id, Authentication a) {
+    if (!has(a, "ADMIN") && !has(a, "RESPONSAVEL"))
+      throw new AccessDeniedException("Sem permissão para o histórico da reserva.");
+    service.get(id);
+    return db.queryForList(
+        "select id,booking_id,actor,at,previous_state,new_state,reason from booking_history where"
+            + " booking_id=? order by id",
+        id);
   }
 
   @PostMapping("/bookings/{id}/movements")

@@ -22,7 +22,8 @@ Base: `http://localhost:8080/api`. JSON UTF-8; instantes ISO-8601 com offset, co
 | GET | `/bookings` | Lista conforme escopo do perfil |
 | POST | `/bookings` | Cria reserva; retorna `{id}` |
 | PUT | `/bookings/{id}` | Substitui dados da reserva própria futura; retorna `{id}` |
-| POST | `/bookings/{id}/state` | `{ "state": "APROVADA" }`; regras em REGRAS.md |
+| POST | `/bookings/{id}/state` | `{ "state": "APROVADA", "reason": "motivo opcional" }`; regras em REGRAS.md. Toda mudança grava o histórico da reserva |
+| GET | `/bookings/{id}/history` | Histórico de estados da reserva: usuário, instante, estado anterior, estado novo e motivo (ADMIN/RESPONSAVEL). Somente leitura |
 | POST | `/bookings/{id}/movements` | `{ "resource": 3, "kind": "RETIRADA" }` ou DEVOLUCAO |
 | GET | `/movements` | Registro de retiradas e devoluções (RESPONSAVEL) |
 | GET/POST | `/maintenance` | Lista bloqueios ativos / cria bloqueio (ADMIN) |
@@ -76,6 +77,19 @@ Regras de cálculo:
 - `recursos` lista salas e materiais; `professores` lista os docentes. Recursos sem uso aparecem com `horas: 0.0`.
 - `conflitosEvitados` conta as tentativas de reserva recusadas por sobreposição (HTTP 409) feitas dentro do período.
 - `fim` anterior ou igual a `inicio`, ou parâmetro ausente: 400. Solicitante: 403. Sem login: 401.
+
+### Histórico de estados da reserva
+
+`GET /bookings/7/history`
+
+```json
+[{"id":1,"booking_id":7,"actor":"ana","at":"2026-11-05T22:10:00.000+00:00","previous_state":null,"new_state":"APROVADA","reason":"Reserva criada"},
+ {"id":2,"booking_id":7,"actor":"ana","at":"2026-11-05T22:30:00.000+00:00","previous_state":"APROVADA","new_state":"CANCELADA","reason":"Aula remarcada"}]
+```
+
+- Criar ou alterar uma reserva e cada mudança de estado gravam uma linha, na mesma transação da mudança: se a operação falha, nenhuma linha fica gravada.
+- O instante vem do `Clock` da aplicação. O motivo vem do campo `reason` da mudança de estado; sem motivo, grava "Não informado".
+- O histórico não pode ser alterado nem apagado: não há rota para isso e o banco recusa `UPDATE` e `DELETE` na tabela `booking_history`.
 
 ### Respostas
 

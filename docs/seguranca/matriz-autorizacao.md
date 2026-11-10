@@ -41,6 +41,7 @@ Todas as requisições enviam token CSRF válido, para que o resultado reflita a
 | M27 | Consultar notificações próprias | GET /api/notifications | 401 | 200 | 200 | 200 | Cada usuário vê só as próprias |
 | M28 | Relatório de utilização (resumo geral) | GET /api/reports | 401 | 403 | 200 | 200 | |
 | M29 | Relatório de utilização por período | GET /api/relatorios/utilizacao?inicio=&fim= | 401 | 403 | 200 | 200 | RF12, Aula 11 |
+| M30 | Histórico de estados da reserva | GET /api/bookings/{id}/history | 401 | 403 | 200 | 200 | RF10, Aula 11 |
 
 ## Regras de posse
 
