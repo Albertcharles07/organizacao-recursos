@@ -54,7 +54,7 @@ Até 05/11/2026, o job `tests` terminava vermelho só no passo do SonarCloud, po
 | Carga | `load/reservas.jmx` (job `load`) | 3 rodadas |
 | Análise estática | SonarCloud | Quality gate aprovado |
 
-TDD: o relatório de utilização e o histórico de estados foram escritos com commits separados de teste ("red") e de implementação ("green"). BDD: `docs/bdd/aprovacao.feature`, automatizado em `ResourceApiIT.bddRestrictedResource`.
+TDD: o relatório de utilização e o histórico de estados foram escritos com commits separados de teste ("red") e de implementação ("green"). Os prints do CI vermelho e verde de cada um estão em `docs/evidencias/tdd/`. BDD: `docs/bdd/aprovacao.feature`, automatizado em `ResourceApiIT.bddRestrictedResource`.
 
 ## Cobertura por classe (CI do commit `00c121f`)
 
@@ -81,14 +81,12 @@ A cobertura do SonarCloud (92,1%) é menor que a do JaCoCo no CI (97,65%) porque
 
 ## Defeitos
 
-Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Fechado também o **P03**, com o SonarCloud no CI. Corrigido e aguardando a análise do SonarCloud: **D09** (SQL montado por concatenação). Abertos: **P04** (revisão por pares em andamento), **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
+Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Fechados também o **P03**, com o SonarCloud no CI, o **P04**, com os PRs #4 a #9 aprovados e integrados em 10/11/2026, e o **D10** (secret `ADMIN_PASSWORD` curto no CI). Corrigido e aguardando a análise do SonarCloud: **D09** (SQL montado por concatenação). Abertos: **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
 
 ## Pendências para a liberação
 
 | Pendência | Responsável | Impacto se ficar de fora |
 | --- | --- | --- |
-| Tornar o repositório público | Dono do repositório | Professor não consegue clonar: limitador "aplicação não executa" |
-| Revisão e merge dos PRs da fila | Integrantes | Critério de revisão por pares; o trabalho fica fora da `main` |
 | Repetir o CI completo no repositório do grupo, no commit da tag | Equipe | Evidências atuais são do fork de validação |
 | Checklist de clone limpo | Integrante com Docker | Bloqueadores do README só aparecem num clone do zero |
 

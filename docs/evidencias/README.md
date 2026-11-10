@@ -23,3 +23,12 @@ Todas as evidências da entrega, com o lugar onde cada uma está. Na entrega fin
 2. Abrir a execução do CI desse commit e copiar o link para a primeira linha da tabela.
 3. Conferir que o quality gate do SonarCloud aparece verde e colocar o link na terceira linha.
 4. Atualizar a coluna "Situação" com os números dessa execução, sem copiar números de execuções antigas.
+
+## TDD (red e green)
+
+| Arquivo | O que mostra |
+| --- | --- |
+| `tdd/relatorio-utilizacao-1-red-ci.png` | Relatório de utilização: CI vermelho no commit só com os testes (red) |
+| `tdd/relatorio-utilizacao-2-commits-red-green.png` | Relatório de utilização: commits de teste (red) e de implementação (green) no PR #4 |
+| `tdd/historico-estados-1-red-erro-compilacao.png` | Histórico de estados: CI vermelho no commit red (o teste ainda não compila sem a implementação) |
+| `tdd/historico-estados-2-green-pr6.png` | Histórico de estados: CI verde depois da implementação, no PR #6 |

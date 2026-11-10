@@ -31,13 +31,13 @@ Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o có
 | Cobertura 80% linhas e 70% branches | Feito | 97,65% e 92,53% no CI do commit `2801221` | Nota de cobertura |
 | Desempenho e robustez sob concorrência | Feito | `docs/performance/resultado-01.md` (p95 até 487 ms com 100 usuários) | Sem evidência de desempenho |
 | Zero bugs e vulnerabilidades críticas (SonarCloud) | Feito | Quality gate aprovado na `main` (06/11/2026); 2 issues médias de segurança corrigidas (D09), nota A a confirmar | Vulnerabilidade sem detecção |
-| Revisão por pares | **Parcial** | PRs abertos aguardando revisão | Critério de autoria e revisão |
+| Revisão por pares | Feito | PRs #2 a #9 revisados e aprovados no GitHub antes do merge; integrados na `main` com merge commit (10/11/2026) | Critério de autoria e revisão |
 
 ## Pendências, em ordem de impacto
 
 1. **Pipeline verde (limitador de nota):** feito em 06/11/2026: repositório público, SonarCloud no CI e os três checks verdes no PR #4. Falta confirmar a nota de segurança A depois da correção do D09.
 2. **Aplicação executável para o professor (limitador de nota):** repositório público e checklist de clone limpo (`docs/entrega/checklist.md`) feito por alguém que siga só o README.
-3. **Integrar os PRs na `main`** com revisão de outro integrante, na ordem da fila.
+3. **Integrar os PRs na `main`:** feito em 10/11/2026. PRs #4 a #9 aprovados e integrados na ordem da fila, com merge commit.
 4. **Repetir no repositório do grupo** o CI completo no commit da tag `v1.0.0-rc1`, porque as execuções de 05/11 com 202 testes foram no fork de validação.
 
 ## Divisão sugerida até a semana 46
