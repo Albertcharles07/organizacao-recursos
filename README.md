@@ -72,10 +72,12 @@ Projeto da disciplina Qualidade de Software (Centro Universitário Senac, 2026.2
 
 | Integrante | GitHub | Papel no projeto |
 | --- | --- | --- |
-| Carlos Daniel de Souza Gomes | [@Viuzcd660](https://github.com/Viuzcd660) | |
-| Charles Elias de Araújo | [@Albertcharles07](https://github.com/Albertcharles07) | Dono do repositório |
-| João Pedro Dias Araújo | [@joaopda03](https://github.com/joaopda03) | |
+| Carlos Daniel de Souza Gomes | [@Viuzcd660](https://github.com/Viuzcd660) | Back-end, com apoio no front-end |
+| Charles Elias de Araújo | [@Albertcharles07](https://github.com/Albertcharles07) | Back-end, com apoio no front-end; dono do repositório |
+| João Pedro Dias Araújo | [@joaopda03](https://github.com/joaopda03) | Front-end |
 | Lucas Rodrigues de Magalhaes | [@lucasrmagalhaess](https://github.com/lucasrmagalhaess) | Auditoria e testes (QA) |
+
+A divisão acima indica a responsabilidade principal de cada um. Na prática, os integrantes se ajudaram entre as áreas. As revisões cruzadas ficam registradas nos PRs.
 
 ## Estrutura e documentação
 
