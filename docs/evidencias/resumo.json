@@ -167,10 +167,9 @@
     "situacao": "atingidas no CI (97,65% e 92,53%)"
   },
   "pendentes": [
-    "SonarCloud e quality gate",
-    "repositório público",
-    "CI completo no repositório do grupo no commit da tag v1.0.0-rc1",
-    "revisão por pares dos PRs"
+    "confirmar nota de segurança A após D09",
+    "integrar os PRs da fila",
+    "CI completo no repositório do grupo no commit da tag v1.0.0-rc1"
   ],
   "decisao": "NAO_LIBERADO_AINDA",
   "mutacaoManual": {
@@ -179,5 +178,28 @@
     "total": 10,
     "documento": "docs/testes/mutacao-manual.md",
     "evidencia": "PRs de rascunho #3 a #12 no fork, fechados sem merge"
+  },
+  "sonarcloud": {
+    "data": "2026-11-06",
+    "branch": "main",
+    "linhasDeCodigo": 736,
+    "qualityGate": "aprovado",
+    "cobertura": 92.1,
+    "duplicacao": 0.0,
+    "issues": {
+      "total": 2,
+      "seguranca": 2,
+      "severidade": "media",
+      "regra": "SQL montado dinamicamente",
+      "defeito": "D09"
+    },
+    "notaSeguranca": "C (antes da correção do D09)",
+    "pr4": {
+      "qualityGate": "aprovado",
+      "issuesNovas": 0,
+      "hotspots": 0,
+      "coberturaCodigoNovo": 100.0,
+      "duplicacaoCodigoNovo": 0.0
+    }
   }
 }

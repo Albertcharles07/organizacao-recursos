@@ -92,27 +92,22 @@ public class ApiController {
     if (includeInactive) admin(authentication);
     if ((start == null) != (end == null))
       throw new IllegalArgumentException("Informe início e fim juntos.");
-    String sql =
-        "select r.* from resource r where "
-            + (includeInactive ? "true" : "r.active")
-            + " and r.type like ? and lower(r.location) like ?"
-            + " and lower(r.competence) like ? and r.capacity>=?";
-    List<Object> args =
-        new ArrayList<>(
-            List.of(
-                type.isEmpty() ? "%" : type,
-                "%" + location.toLowerCase(Locale.ROOT) + "%",
-                "%" + competence.toLowerCase(Locale.ROOT) + "%",
-                capacity));
-    if (start != null) {
-      Rules.interval(start, end);
-      sql +=
-          " and not exists(select 1 from allocation a where a.resource_id=r.id and a.active and"
-              + " a.start_at<? and a.end_at>?)";
-      args.add(BookingService.ts(end));
-      args.add(BookingService.ts(start));
-    }
-    return db.queryForList(sql + " order by r.type,r.name", args.toArray());
+    if (start != null) Rules.interval(start, end);
+    // SQL fixo (defeito D09): as variações vêm só de parâmetros, nunca de texto concatenado.
+    return db.queryForList(
+        "select r.* from resource r where (? or r.active) and r.type like ? and lower(r.location)"
+            + " like ? and lower(r.competence) like ? and r.capacity>=? and (cast(? as"
+            + " timestamptz) is null or not exists(select 1 from allocation a where"
+            + " a.resource_id=r.id and a.active and a.start_at<cast(? as timestamptz) and"
+            + " a.end_at>cast(? as timestamptz))) order by r.type,r.name",
+        includeInactive,
+        type.isEmpty() ? "%" : type,
+        "%" + location.toLowerCase(Locale.ROOT) + "%",
+        "%" + competence.toLowerCase(Locale.ROOT) + "%",
+        capacity,
+        start == null ? null : BookingService.ts(end),
+        start == null ? null : BookingService.ts(end),
+        start == null ? null : BookingService.ts(start));
   }
 
   @PostMapping("/resources")
@@ -198,15 +193,14 @@ public class ApiController {
 
   @GetMapping("/bookings")
   public List<Map<String, Object>> bookings(Authentication a) {
-    String where = has(a, "SOLICITANTE") ? " where b.owner=?" : "";
-    Object[] args = has(a, "SOLICITANTE") ? new Object[] {a.getName()} : new Object[] {};
+    // Solicitante vê só as próprias reservas; os demais perfis veem todas. SQL fixo (D09).
     return db.queryForList(
         "select b.*, coalesce((select string_agg(r.name, ', ' order by r.name) from allocation al"
             + " join resource r on r.id=al.resource_id where al.booking_id=b.id and"
-            + " al.current_version),'') as resources from booking b"
-            + where
+            + " al.current_version),'') as resources from booking b where (? or b.owner=?)"
             + " order by b.start_at desc",
-        args);
+        !has(a, "SOLICITANTE"),
+        a.getName());
   }
 
   @PostMapping("/bookings")
@@ -322,12 +316,12 @@ public class ApiController {
             + " where al.resource_id=r.id and al.active and b.state in"
             + " ('APROVADA','EM_USO','CONCLUIDA') and al.start_at<cast(? as timestamptz) and"
             + " al.end_at>cast(? as timestamptz)),0)::float8 as horas from resource r where"
-            + " r.type %s 'PROFESSOR' order by r.name,r.id";
+            + " (r.type='PROFESSOR')=? order by r.name,r.id";
     var relatorio = new LinkedHashMap<String, Object>();
     relatorio.put("inicio", inicio.toString());
     relatorio.put("fim", fim.toString());
-    relatorio.put("recursos", db.queryForList(sql.formatted("<>"), f, i, f, i));
-    relatorio.put("professores", db.queryForList(sql.formatted("="), f, i, f, i));
+    relatorio.put("recursos", db.queryForList(sql, f, i, f, i, false));
+    relatorio.put("professores", db.queryForList(sql, f, i, f, i, true));
     relatorio.put(
         "conflitosEvitados",
         db.queryForObject(
