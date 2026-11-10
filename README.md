@@ -2,7 +2,7 @@
 
 Aplicação acadêmica para salas, professores e materiais, com Java 21, Spring Boot 3.5.16, PostgreSQL 16, interface responsiva em português e autenticação por sessão.
 
-> **Estado da entrega:** a suíte automatizada roda no GitHub Actions (unidade, integração com PostgreSQL, API, E2E e carga). Veja `docs/relatorio-qualidade.md` para os resultados e as pendências, e `docs/evidencias/README.md` para o índice das evidências. Não é uma declaração de homologação nem de ausência de vulnerabilidades: a análise do SonarCloud ainda está pendente.
+> **Estado da entrega:** a suíte automatizada roda no GitHub Actions (unidade, integração com PostgreSQL, API, E2E e carga). Veja `docs/relatorio-qualidade.md` para os resultados e as pendências, e `docs/evidencias/README.md` para o índice das evidências. O quality gate do SonarCloud está aprovado, com nota de segurança A. Isso não é uma declaração de homologação nem de ausência de vulnerabilidades.
 
 ## Começar pelo Docker (Windows, macOS ou Linux)
 

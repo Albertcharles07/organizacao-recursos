@@ -6,11 +6,11 @@ Todas as evidências da entrega, com o lugar onde cada uma está. Na entrega fin
 | --- | --- | --- |
 | Execução do CI (testes, cobertura, E2E e carga) | Aba Actions do repositório, workflow "Qualidade"; anotação "Resumo dos testes" de cada execução | 211 testes, E2E e carga passando na `main` do grupo, "Qualidade #21", commit `7a037b3` (print: `ci-main-21.png`) |
 | Relatório do JaCoCo | Artifact `testes-e-cobertura` de cada execução; cópias em `docs/evidencias/ci-qualidade-1/` e `ci-qualidade-2/` | 97,65% linhas, 92,53% branches |
-| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI e projeto no SonarCloud | Aprovado (06/11/2026); 2 issues médias corrigidas (D09) |
+| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI e projeto no SonarCloud | Aprovado (10/11/2026): 0 issues, nota de segurança A (print: `sonarcloud-main-2026-11-10.png`) |
 | Resultado da carga | `docs/performance/resultado-01.md`; artifact `carga-jmeter` | Aprovado |
 | Mutação manual | `docs/testes/mutacao-manual.md` | 10 de 10 detectadas |
 | Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | 30 operações × 4 perfis passando |
-| Status dos requisitos | `docs/status-requisitos.md` | 14 de 14 feitos; SonarCloud pendente |
+| Status dos requisitos | `docs/status-requisitos.md` | 14 de 14 feitos; SonarCloud com nota A |
 | RTM | `docs/rtm.md` | 100% dos críticos com evidência |
 | Defeitos | `docs/defeitos/README.md` | D01 a D05, D07, P01 e P02 fechados |
 | Relatório de qualidade | `docs/relatorio-qualidade.md` | Ainda não liberado |
