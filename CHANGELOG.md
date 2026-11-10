@@ -15,7 +15,7 @@ Primeira versão candidata. Itens integrados desde a versão inicial de 25/10/20
 - Testes do histórico com Clock fixo, rollback e imutabilidade (`HistoricoEstadosTest`, `HistoricoEstadosIT`).
 - Entrega da notificação com WireMock (`NotificacaoEntregaIT`), caminhos de erro (`CasosDeErroIT`) e filtros de pesquisa (`FiltrosRecursosIT`).
 - Teste de regressão do defeito D04.
-- Suíte: de 44 para 208 testes; cobertura de 93,39%/77,85% para 97,65%/92,53% (linhas/branches).
+- Suíte: de 44 para 211 testes; cobertura de 93,39%/77,85% para 97,63%/92,61% (linhas/branches).
 
 ### CI
 - Runner fixo `ubuntu-24.04` (correção do defeito D05).
