@@ -48,7 +48,7 @@ Cada integrante escreve, com as próprias palavras, o que fez no projeto. Declar
 
 | Integrante | O que fez | Uso de IA |
 | --- | --- | --- |
-| _____ | _____ | _____ |
+| Lucas Rodrigues de Magalhaes | Responsável pela auditoria e pelos testes (QA): defini o que testar, conferi os resultados no CI e no SonarCloud, registrei defeitos e evidências e integrei os PRs na main. | Usei o Claude para gerar testes, correções e documentação. Revisei e validei cada mudança no CI antes do merge. |
 | _____ | _____ | _____ |
 | _____ | _____ | _____ |
 | _____ | _____ | _____ |
