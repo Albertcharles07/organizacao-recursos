@@ -43,8 +43,8 @@ jobs:
   e2e:
     runs-on: ubuntu-24.04
     env:
-      DB_PASSWORD: ci-database-password-123
-      ADMIN_PASSWORD: e2e-admin-password-123
+     DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+     ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
