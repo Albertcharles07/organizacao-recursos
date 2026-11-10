@@ -1,28 +1,28 @@
 # RTM — requisito, risco, teste e evidência
 
-Status de rastreabilidade: todos os 14 requisitos funcionais e as regras críticas abaixo têm ligação proposta. **Mapeado não significa aprovado.** Evidências de execução nesta entrega: `docs/evidencias/`. Testes que dependem de Docker, navegador e JMeter ainda precisam de execução no ambiente da equipe.
+Status de rastreabilidade: todos os 14 requisitos funcionais e as regras críticas abaixo têm teste ligado. **Mapeado não significa aprovado**: a coluna de evidência só diz "passou" quando o teste executou no CI. Evidências por execução em `docs/evidencias/` (índice em `docs/evidencias/resumo.json`). Atualizado em 05/11/2026.
 
 | ID | Requisito | Risco | Implementação | Teste/verificação | Evidência / estado |
 |---|---|---|---|---|---|
-| RF01* | Autenticação e autorização | Acesso indevido | SecurityConfig, ActiveAccountFilter, API | AutorizacaoMatrizIT (matriz em docs/seguranca/matriz-autorizacao.md: 28 operações × 4 perfis, posse); BlackBoxIT; inputsAndPermissions; ownerIsEnforced; bddRestrictedResource | Matriz e teste escritos; execução no CI pendente |
-| RF02 | Cadastros e consulta | Cadastro inconsistente | /resources e /users | adminResourceAndUserFlows; E2E | Execução IT/E2E pendente |
-| RF03 | Filtros e disponibilidade | Disponibilidade falsa | GET /resources | availabilityFiltersAndPrivacy | Execução IT pendente |
-| RF04 | Criar, alterar e cancelar | Perda de dados | BookingService.save/transition | cancelReleasesResources; failedEditRollsBack; ownerIsEnforced | Execução IT pendente |
-| RF05* | Sobreposição sala/material/professor | Recurso duplicado | allocation EXCLUDE GiST | RulesTest.overlap; teacherCannotBeInTwoRooms; adjacentReservationsAreAccepted | Unitários executados; IT pendente |
-| RF06* | Concorrência | Dupla reserva simultânea | Transação + exclusão | simultaneousRequestsAcceptOnlyOne; JMeter | IT/carga pendentes |
-| RF07* | Aprovação restrita | Uso sem autorização | estado inicial e perfil | restrictedApprovalAndAudit; bddRestrictedResource | Cenário BDD especificado; IT pendente |
-| RF08* | Bloqueio/manutenção | Reserva indisponível | allocation sem booking_id | maintenanceAndReservationsShareExclusion; maintenanceCannotOverrideBooking | IT pendente |
-| RF09 | Retirada/devolução | Material não devolvido | material_movement | startedBookingAndMaterialLifecycle | IT pendente |
-| RF10* | Histórico auditável | Alteração sem autoria | audit + trigger | restrictedApprovalAndAudit; auditCannotBeRewritten | IT pendente |
-| RF11 | Notificação | Falha externa compromete fluxo | notification + gateway | NotificationGatewayTest; restrictedApprovalAndAudit | WireMock executado; IT pendente |
-| RF12 | Utilização, horas, conflitos | Indicadores incorretos | GET /reports | maintenanceEndpointsAndReporting; simultaneousRequestsAcceptOnlyOne | IT pendente; conferir valores na demo |
-| RF13 | Responsividade e erros | Operação incompreensível | static + ApiErrors | E2E móvel/desktop; inputsAndPermissions; AutorizacaoMatrizIT.entradasInvalidasRetornam400SemDetalhesInternos | Sintaxe JS verificada; E2E e IT pendentes |
-| RF14 | Documentação | Uso sem contrato | docs/API.md, README | Revisão por colega e BlackBoxIT | Documento entregue; revisão humana pendente |
-| RC01* | Fim > início | Intervalo inválido | Rules.interval + CHECK SQL | RulesTest.invalidIntervals | Unitário executado |
-| RC02* | Reserva iniciada não apagada | Perda de histórico | Sem DELETE; restrições de estado | startedBookingAndMaterialLifecycle; inspeção de rotas | IT pendente |
-| RC03* | Toda transição auditada | Rastreio incompleto | Auditoria mesma transação | restrictedApprovalAndAudit | IT pendente |
-| RNF01 | 80% linhas / 70% branches | Testes insuficientes | JaCoCo + quality profile | mvn verify -Pquality | Não demonstrado pela execução parcial |
-| RNF02 | Zero problemas críticos | Vulnerabilidade/bug crítico | SonarCloud quality gate | Scanner Maven no Actions | Conta/token e análise pendentes |
-| RNF03 | Carga e robustez | Latência/falha sob concorrência | JMeter e timeout webhook | load/reservas.jmx; summarize.py; WireMock | WireMock executado; carga pendente |
+| RF01* | Autenticação e autorização | Acesso indevido | SecurityConfig, ActiveAccountFilter, API | AutorizacaoMatrizIT (matriz em docs/seguranca/matriz-autorizacao.md: 29 operações × 4 perfis, posse); BlackBoxIT; inputsAndPermissions; ownerIsEnforced; bddRestrictedResource | AutorizacaoMatrizIT: 115 testes passaram no CI "Qualidade #2" (00c121f), com 28 operações; M29 entra no CI do PR do relatório. Demais: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF02 | Cadastros e consulta | Cadastro inconsistente | /resources e /users | adminResourceAndUserFlows; E2E | IT: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f); E2E passou no CI "#1" e no PR #3 |
+| RF03 | Filtros e disponibilidade | Disponibilidade falsa | GET /resources | availabilityFiltersAndPrivacy | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF04 | Criar, alterar e cancelar | Perda de dados | BookingService.save/transition | cancelReleasesResources; failedEditRollsBack; ownerIsEnforced | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF05* | Sobreposição sala/material/professor | Recurso duplicado | allocation EXCLUDE GiST | RulesTest.overlap; teacherCannotBeInTwoRooms; adjacentReservationsAreAccepted | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF06* | Concorrência | Dupla reserva simultânea | Transação + exclusão | simultaneousRequestsAcceptOnlyOne; JMeter | IT: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) (1 aceita, 1 recusada com 409); JMeter pendente |
+| RF07* | Aprovação restrita | Uso sem autorização | estado inicial e perfil | restrictedApprovalAndAudit; bddRestrictedResource; AutorizacaoMatrizIT M16 | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF08* | Bloqueio/manutenção | Reserva indisponível | allocation sem booking_id | maintenanceAndReservationsShareExclusion; maintenanceCannotOverrideBooking | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF09 | Retirada/devolução | Material não devolvido | material_movement | startedBookingAndMaterialLifecycle | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF10* | Histórico auditável | Alteração sem autoria | audit + trigger | restrictedApprovalAndAudit; auditCannotBeRewritten | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f). **Parcial** em relação à Aula 11: faltam estado anterior e novo, motivo, `Clock` e teste de rollback |
+| RF11 | Notificação | Falha externa compromete fluxo | notification + gateway | NotificationGatewayTest; restrictedApprovalAndAudit | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f); `NotificationDelivery` sem teste do resultado da entrega |
+| RF12 | Utilização, horas, conflitos | Indicadores incorretos | GET /relatorios/utilizacao (por período) e GET /reports | RelatorioUtilizacaoIT (oráculo calculado à mão: período vazio, limite do período, cancelada, conflitos, 401/403); AutorizacaoMatrizIT M29; maintenanceEndpointsAndReporting | RelatorioUtilizacaoIT escrito antes do código (TDD); execução no CI do PR do relatório pendente. maintenanceEndpointsAndReporting: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RF13 | Responsividade e erros | Operação incompreensível | static + ApiErrors | E2E móvel/desktop; inputsAndPermissions; AutorizacaoMatrizIT.entradasInvalidasRetornam400SemDetalhesInternos | IT: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f); E2E passou no CI "#1" e no PR #3 |
+| RF14 | Documentação | Uso sem contrato | docs/API.md, README | Revisão por colega e BlackBoxIT | BlackBoxIT: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f); revisão por colega pendente |
+| RC01* | Fim > início | Intervalo inválido | Rules.interval + CHECK SQL | RulesTest.invalidIntervals | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RC02* | Reserva iniciada não apagada | Perda de histórico | Sem DELETE; restrições de estado | startedBookingAndMaterialLifecycle; inspeção de rotas (não há DELETE de reserva na API) | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f) |
+| RC03* | Toda transição auditada | Rastreio incompleto | Auditoria mesma transação | restrictedApprovalAndAudit | Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f). **Parcial**: falta o teste de rollback da Aula 11 |
+| RNF01 | 80% linhas / 70% branches | Testes insuficientes | JaCoCo + quality profile | mvn verify -Pquality | **Atingido**: 95,40% de linhas e 84,81% de branches no CI "#2"; passo de meta de cobertura verde |
+| RNF02 | Zero problemas críticos | Vulnerabilidade/bug crítico | SonarCloud quality gate | Scanner Maven no Actions | Pendente: `SONAR_TOKEN` não configurado (defeito P03) |
+| RNF03 | Carga e robustez | Latência/falha sob concorrência | JMeter e timeout webhook | load/reservas.jmx; summarize.py; WireMock | WireMock: Passou no CI "Qualidade #1" (fff753c) e "#2" (00c121f); carga pendente |
 
-`*` = requisito crítico para o aceite. Cobertura de rastreabilidade crítica: 100% mapeados nesta matriz; cobertura de execução crítica: parcial. Atualizar cada linha com URL da execução, commit e artifact, sem substituir uma pendência por “aprovado” apenas porque existe um teste.
+`*` = requisito crítico para o aceite. Cobertura de rastreabilidade crítica: 100% mapeados nesta matriz; cobertura de execução crítica: todos os requisitos críticos têm teste que passou no CI; RF10 e RC03 estão parciais em relação à Aula 11, e a mutação manual ainda não foi feita. Atualizar cada linha com URL da execução, commit e artifact, sem substituir uma pendência por “aprovado” apenas porque existe um teste.

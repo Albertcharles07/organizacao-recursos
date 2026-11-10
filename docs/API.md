@@ -30,6 +30,7 @@ Base: `http://localhost:8080/api`. JSON UTF-8; instantes ISO-8601 com offset, co
 | GET | `/audit` | Últimas 500 entradas (ADMIN/RESPONSAVEL) |
 | GET | `/notifications` | Últimas 100 notificações próprias |
 | GET | `/reports` | Utilização por recurso e total de conflitos (ADMIN/RESPONSAVEL) |
+| GET | `/relatorios/utilizacao` | `inicio` e `fim` obrigatórios (ISO-8601). Horas por recurso, horas por professor e conflitos evitados no período (ADMIN/RESPONSAVEL) |
 
 ### Cadastro de recurso
 
@@ -56,6 +57,25 @@ Até 30 IDs, positivos e existentes. Duplicatas são removidas. Para alterar, en
 ```json
 {"username":"coordenacao","password":"substituir-por-senha-propria","role":"RESPONSAVEL"}
 ```
+
+### Relatório de utilização por período
+
+`GET /relatorios/utilizacao?inicio=2026-12-01T08:00:00-03:00&fim=2026-12-01T18:00:00-03:00`
+
+```json
+{"inicio":"2026-12-01T11:00:00Z","fim":"2026-12-01T21:00:00Z",
+ "recursos":[{"id":1,"name":"Sala 101","type":"SALA","horas":5.0}],
+ "professores":[{"id":3,"name":"Prof. Ana","type":"PROFESSOR","horas":3.0}],
+ "conflitosEvitados":2}
+```
+
+Regras de cálculo:
+
+- Contam as reservas APROVADA, EM_USO e CONCLUIDA. SOLICITADA, CANCELADA, REJEITADA e NAO_COMPARECEU não contam.
+- Só entra a parte da reserva dentro do período `[inicio, fim)`: uma reserva das 17h às 20h num período que termina às 18h conta 1 hora.
+- `recursos` lista salas e materiais; `professores` lista os docentes. Recursos sem uso aparecem com `horas: 0.0`.
+- `conflitosEvitados` conta as tentativas de reserva recusadas por sobreposição (HTTP 409) feitas dentro do período.
+- `fim` anterior ou igual a `inicio`, ou parâmetro ausente: 400. Solicitante: 403. Sem login: 401.
 
 ### Respostas
 
