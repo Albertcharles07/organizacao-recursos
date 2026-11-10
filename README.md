@@ -66,6 +66,17 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 5. O pipeline exige as metas de cobertura e o quality gate. Sem credenciais/configuração ou sem atingir as metas, ficará vermelho: isso é uma pendência real, não deve ser ocultada.
 6. Baixe os artifacts do Actions e registre links/commit na RTM e no relatório final.
 
+## Equipe
+
+Projeto da disciplina Qualidade de Software (Centro Universitário Senac, 2026.2).
+
+| Integrante | Papel no projeto |
+| --- | --- |
+| Carlos Daniel de Souza Gomes | |
+| Charles Elias de Araújo | Dono do repositório |
+| João Pedro Dias Araújo | |
+| Lucas Rodrigues de Magalhaes | Auditoria e testes (QA) |
+
 ## Estrutura e documentação
 
 - `src/main/java`: API, domínio, segurança, notificações.
