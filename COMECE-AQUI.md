@@ -9,4 +9,4 @@
 
 O passo a passo completo está no README.md. Os slides estão em docs/Apresentacao-Recursos.pptx.
 
-**Antes de entregar à faculdade:** leia docs/RELATORIO-QUALIDADE.md e docs/ENTREGA.md. Passaram 26 testes locais, mas ainda falta a validação completa com Java 21, Docker, navegador, JMeter e SonarCloud.
+**Antes de entregar à faculdade:** leia docs/relatorio-qualidade.md e docs/ENTREGA.md. A suíte completa (unidade, integração, E2E e carga) roda no GitHub Actions; falta a análise do SonarCloud.
