@@ -2,7 +2,7 @@
 
 Aplicação acadêmica para salas, professores e materiais, com Java 21, Spring Boot 3.5.16, PostgreSQL 16, interface responsiva em português e autenticação por sessão.
 
-> **Estado da entrega:** a suíte automatizada roda no GitHub Actions (unidade, integração com PostgreSQL, API, E2E e carga). Veja `docs/relatorio-qualidade.md` para os resultados e as pendências, e `docs/evidencias/README.md` para o índice das evidências. Não é uma declaração de homologação nem de ausência de vulnerabilidades: a análise do SonarCloud ainda está pendente.
+> **Estado da entrega:** a suíte automatizada roda no GitHub Actions (unidade, integração com PostgreSQL, API, E2E e carga). Veja `docs/relatorio-qualidade.md` para os resultados e as pendências, e `docs/evidencias/README.md` para o índice das evidências. O quality gate do SonarCloud está aprovado, com nota de segurança A. Isso não é uma declaração de homologação nem de ausência de vulnerabilidades.
 
 ## Começar pelo Docker (Windows, macOS ou Linux)
 
@@ -61,7 +61,7 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 
 1. Crie um repositório e envie **o conteúdo desta pasta**, incluindo `.github/`. Não envie `.env` ou `target/`.
 2. Crie o projeto no SonarCloud conectado ao repositório e desative análise automática se usar o scanner Maven.
-3. No GitHub, configure o secret `SONAR_TOKEN` e as variables `SONAR_PROJECT_KEY` e `SONAR_ORGANIZATION`.
+3. No GitHub, configure os secrets `SONAR_TOKEN`, `DB_PASSWORD` e `ADMIN_PASSWORD` e as variables `SONAR_PROJECT_KEY` e `SONAR_ORGANIZATION`. O secret `ADMIN_PASSWORD` segue a mesma regra do `.env`: pelo menos 12 caracteres, senão a aplicação não sobe e o job `e2e` falha (defeito D10).
 4. Ative proteção de `main`, revisão por colega e checks obrigatórios. Abra um PR para executar `.github/workflows/ci.yml`.
 5. O pipeline exige as metas de cobertura e o quality gate. Sem credenciais/configuração ou sem atingir as metas, ficará vermelho: isso é uma pendência real, não deve ser ocultada.
 6. Baixe os artifacts do Actions e registre links/commit na RTM e no relatório final.

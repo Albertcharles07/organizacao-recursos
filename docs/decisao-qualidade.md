@@ -15,14 +15,14 @@ Justificativa (proporcional à evidência; testes locais não sustentam "pronto 
 
 ## Critérios e evidência
 
-Preencher a coluna "No commit da tag" com o resultado da execução do CI da tag. A coluna "Em 05/11/2026" mostra o último resultado conhecido, só como referência.
+Preencher a coluna "No commit da tag" com o resultado da execução do CI da tag. A coluna "Em 10/11/2026" mostra o último resultado conhecido, só como referência.
 
-| Critério | Meta | Em 05/11/2026 | No commit da tag | Atendido? |
+| Critério | Meta | Em 10/11/2026 | No commit da tag | Atendido? |
 | --- | --- | --- | --- | --- |
-| Testes automatizados | 100% passando | 208 de 208 (fork, `2801221`) | | |
-| Cobertura de linhas | ≥ 80% | 97,65% | | |
-| Cobertura de branches | ≥ 70% | 92,53% | | |
-| Bugs e vulnerabilidades críticas (SonarCloud) | 0 | 0 (2 issues médias corrigidas, D09) | | |
+| Testes automatizados | 100% passando | 211 de 211 (`main`, `7a037b3`) | | |
+| Cobertura de linhas | ≥ 80% | 97,63% | | |
+| Cobertura de branches | ≥ 70% | 92,61% | | |
+| Bugs e vulnerabilidades críticas (SonarCloud) | 0 | 0; nota de segurança A (D09 fechado) | | |
 | Quality gate do SonarCloud | Verde | Aprovado | | |
 | E2E no navegador | Passando | Passando | | |
 | Dupla reserva sob carga | 1 reserva por rodada | 1 em 10, 50 e 100 usuários | | |
