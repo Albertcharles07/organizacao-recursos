@@ -1,132 +1,105 @@
 # Checklist da entrega (clone limpo)
 
-Roteiro da Aula 14, etapa 1. **Quem verifica precisa clonar o repositório do zero, numa pasta nova, e seguir só o README**, sem reaproveitar nada da máquina de quem desenvolveu. Nesta etapa só se anota; nada é corrigido.
+Roteiro da Aula 14, etapa 1. A verificação foi feita em um clone novo do repositório. A aplicação iniciou seguindo a seção “Começar pelo Docker” do README, e os 211 testes do Maven passaram.
 
 - Data da verificação: 12/11/2026
 - Quem verificou: Carlos Daniel de Souza Gomes
-- Commit verificado: f4a706f9de7b5547704cdb735dbcf156b0757bb9
-- Sistema operacional e versão do Docker: Windows; Docker 29.9.2, build a82e528
-- Java utilizado na verificação Maven: 21.0.13
+- Versão candidata: [`v1.0.0-rc1`](https://github.com/Albertcharles07/organizacao-recursos/tree/v1.0.0-rc1)
+- Commit verificado e marcado pela tag: [`f4a706f9de7b5547704cdb735dbcf156b0757bb9`](https://github.com/Albertcharles07/organizacao-recursos/commit/f4a706f9de7b5547704cdb735dbcf156b0757bb9)
+- CI do mesmo commit: [Qualidade #23 — aprovado](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609)
+- Ambiente local: Windows, Docker 29.9.2 (build `a82e528`) e Java 21.0.13
 
 ## Artefatos
 
-A coluna "Existe e caminho" foi preenchida a partir do repositório em 05/11/2026. Os resultados abaixo registram as verificações locais e a revisão documental realizada via GitHub. “Não conferido localmente” não significa reprovação.
-
-As observações sobre atualização descrevem a situação encontrada no commit avaliado. Textos preparados posteriormente só serão considerados incorporados após serem salvos e conferidos no repositório.
+A coluna “Existe e caminho” foi preenchida originalmente em 05/11/2026. Em 12/11/2026, os arquivos foram conferidos no clone e as evidências foram consultadas no GitHub, com apoio do ChatGPT. A coluna “Atualizado?” descreve o conteúdo encontrado no commit avaliado. A última coluna indica se houve leitura do documento, execução local ou consulta ao CI.
 
 | Item exigido | Existe e caminho | Atualizado? | Conferido no clone? |
 | --- | --- | --- | --- |
-| README com instalação reproduzível | `README.md` | Sim — instruções de inicialização validadas | Sim |
-| Aplicação sobe só com o README (`docker compose up --build -d`) | `compose.yaml`, `Dockerfile`, `.env.example` | Sim — inicialização validada | Sim |
-| `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `.mvn/wrapper/` | Sim — execução concluída com sucesso | Sim |
-| Documentação da API | `docs/API.md` | Conteúdo revisado via GitHub; correspondência completa com o código não validada | Não conferido localmente |
-| RTM | `docs/rtm.md` | Parcial — atualizar referências para o commit final entregue | Não conferido localmente |
-| Diagramas de contexto, componentes e sequências críticas | `docs/ARQUITETURA.md` | Diagramas presentes; correspondência completa com o código não validada | Não conferido localmente |
-| Plano de testes | `docs/PLANO-TESTES.md` | Parcial — corrigir caminho do BDD e alinhar descrição das rodadas de carga | Não conferido localmente |
-| Relatório de testes e de qualidade | `docs/relatorio-qualidade.md` | Parcial — registrar o clone limpo e atualizar a referência do CI | Não conferido localmente |
-| Pipeline de CI | `.github/workflows/ci.yml` | Arquivo revisado via GitHub; testes, cobertura, SonarCloud, E2E e carga aprovados na execução Qualidade #23 | Não conferido localmente |
-| Relatórios do JaCoCo | Local: `target/site/jacoco/index.html`; CI: artifact `testes-e-cobertura` | Sim — resultados vinculados ao commit verificado | Sim — relatório local e artifact do CI conferidos |
-| Relatório do SonarCloud | Passo do SonarCloud no CI | Quality gate aprovado na execução Qualidade #23; painel detalhado não revisado | Não se aplica ao clone — verificação via CI |
-| Plano e resultado da carga | `docs/PLANO-CARGA.md`, `docs/performance/resultado-01.md` | Parcial — corrigir contradição sobre ausência de resultados e atualizar referências; job de carga aprovado na execução #23 | Não conferido localmente |
-| Registro de defeitos | `docs/defeitos/README.md` | Revisado via GitHub — D06 permanece aberto e P05 é limitação documentada | Não conferido localmente |
-| Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | Parcial — contém 30 operações; DV01 e OB02 ainda exigem decisão da equipe | Não conferido localmente |
-| Mutação manual | `docs/testes/mutacao-manual.md` | Evidência histórica de 10/10 mutações detectadas; não repetida no commit verificado | Não conferido localmente |
-| Status dos requisitos | `docs/status-requisitos.md` | Parcial — registrar o clone limpo e atualizar referências finais | Não conferido localmente |
-| Índice de evidências | `docs/evidencias/README.md` | Texto atualizado preparado com links do CI #23; incorporação ao repositório não confirmada | Não conferido localmente |
-| Decisão de qualidade | `docs/decisao-qualidade.md` | Proposta técnica e critérios preparados; incorporação não confirmada; decisão final, tag e responsáveis pendentes | Não conferido localmente |
-| `CHANGELOG.md` | `CHANGELOG.md` | Parcial — conferir e atualizar a indicação da versão candidata “a criar” | Não conferido localmente |
+| README com instalação reproduzível | `README.md` | Sim para o fluxo testado. As instruções permitiram iniciar a aplicação e entrar como admin. | Sim — instruções executadas |
+| Aplicação sobe só com o README | `compose.yaml`, `Dockerfile`, `.env.example` | Sim. A aplicação iniciou com `docker compose up --build -d`. | Sim — inicialização e login |
+| `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `mvnw.cmd`, `.mvn/wrapper/` | Sim. O Maven terminou com `BUILD SUCCESS` e 211 testes aprovados. | Sim — comando executado |
+| Documentação da API | `docs/API.md` | Os métodos e caminhos de recursos, usuários, reservas, manutenção e relatórios correspondem às declarações do `ApiController`. A comparação cobriu as rotas, sem testar individualmente todos os exemplos de resposta. | Sim — documento e rotas |
+| RTM | `docs/rtm.md` | Parcial. Liga requisitos a testes e evidências. A referência principal ainda é o CI #21. Atualizar para o commit da RC1 e o CI #23. | Sim — documento |
+| Diagramas de contexto, componentes e sequências críticas | `docs/ARQUITETURA.md` | Há diagramas de contexto, componentes, concorrência e material restrito. No fluxo de concorrência, foram confirmados o `FOR UPDATE` no Java e a restrição `EXCLUDE` no PostgreSQL. | Sim — documento e implementação da concorrência |
+| Plano de testes | `docs/PLANO-TESTES.md` | Parcial. A tabela resume a carga em 50 usuários. O workflow executa rodadas com 10, 50 e 100. O cenário BDD está em `docs/bdd/aprovacao.feature`. | Sim — plano e workflow |
+| Relatório de testes e de qualidade | `docs/relatorio-qualidade.md` | Parcial. O total de 211 testes coincide com a execução local. Falta registrar o clone limpo concluído e a execução #23. | Sim — documento e resultados locais |
+| Pipeline de CI | `.github/workflows/ci.yml` | Conferido. Os jobs `tests`, `e2e` e `load` passaram na execução #23. As metas de cobertura e o quality gate também passaram. | Sim — workflow local e execução no GitHub |
+| Relatórios do JaCoCo | `target/site/jacoco/index.html` e artifact `testes-e-cobertura` | Sim. O relatório local foi aberto e o relatório do artifact do mesmo commit foi conferido. | Sim — relatório local e artifact do CI |
+| Relatório do SonarCloud | Etapa “SonarCloud e quality gate” do CI | O quality gate passou na execução #23. A nota e as métricas detalhadas dessa análise não foram conferidas no painel. | Verificação no CI |
+| Plano e resultado da carga | `docs/PLANO-CARGA.md`, `docs/performance/resultado-01.md` | Parcial. A carga passou no CI #23. O plano ainda diz “Sem resultado medido nesta entrega”, embora apresente resultados. Os percentis do relatório pertencem às execuções históricas identificadas no arquivo. | Sim — documentos locais e resultado do CI |
+| Registro de defeitos | `docs/defeitos/README.md` | O registro identifica as correções realizadas. D06 permanece aberto e P05 consta como limitação conhecida. | Sim — documento |
+| Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | Contém 30 operações. A equipe ainda precisa decidir quem pode criar reservas (DV01) e confirmar quem pode consultar os motivos de manutenção (OB02). | Sim — documento |
+| Mutação manual | `docs/testes/mutacao-manual.md` | O relatório registra 10 de 10 mutações detectadas na base `0170b7b`. A execução é histórica. | Sim — relatório lido, sem reexecução |
+| Status dos requisitos | `docs/status-requisitos.md` | Os 14 requisitos funcionais estão mapeados. Falta incluir o resultado do clone limpo e a referência da RC1. | Sim — documento |
+| Índice de evidências | `docs/evidencias/README.md` | Parcial. No commit da RC1, o índice ainda cita o CI #21 e percentuais históricos. Foi preparado um texto com os links da execução #23. | Sim — documento |
+| Decisão de qualidade | `docs/decisao-qualidade.md` | No commit da RC1, o documento está em rascunho. A tag, o SHA e o CI já estão identificados. Falta registrar a decisão da equipe e os responsáveis pelos riscos. | Sim — documento |
+| `CHANGELOG.md` | `CHANGELOG.md` | Registra funcionalidades, 211 testes e mudanças no CI. No commit avaliado, a RC1 ainda aparece como “a criar”. Atualizar o registro para refletir a publicação. | Sim — documento |
 
-Observação para a verificação: o projeto usa o Maven Wrapper; não é preciso ter o Maven instalado, só o JDK 21.
-
-A revisão documental foi realizada via GitHub, com apoio do ChatGPT, nos arquivos do commit f4a706f9de7b5547704cdb735dbcf156b0757bb9. Essa análise não representa conferência local de todos os documentos nem reexecução dos testes históricos de carga e mutação.
-
-## Resultado da execução
+## Resultado da execução local
 
 ### Clone e inicialização
 
-O repositório foi clonado em uma pasta nova chamada `teste-limpo`. A aplicação iniciou normalmente seguindo as instruções da seção “Começar pelo Docker” do README, com o comando `docker compose up --build -d`.
+O repositório foi clonado na pasta nova `teste-limpo`. Com o Docker Desktop aberto, foram seguidas as instruções do README para configurar o `.env` e executar `docker compose up --build -d`.
 
-Foi possível acessar http://localhost:8080 e entrar com o usuário admin. Não ocorreram erros durante esses passos. As senhas do `.env` não foram incluídas neste registro.
+A aplicação abriu em http://localhost:8080 e o login com o usuário `admin` funcionou. Nenhum desses passos apresentou erro. As senhas usadas no `.env` foram mantidas em sigilo.
 
 ### Testes automatizados
 
-O comando de verificação do Maven foi executado com Java 21.0.13 e terminou com BUILD SUCCESS.
+O Maven Wrapper executou `verify` com Java 21.0.13. A execução terminou com **BUILD SUCCESS** em **4min31s**, no dia 12/11/2026 às 16h29min29s (UTC−03:00).
 
-- Testes unitários: 32.
-- Testes de integração: 179.
-- Total: 211 testes.
-- Falhas: 0.
-- Erros: 0.
-- Testes ignorados: 0.
-- Tempo total: 4min31s.
-- Término: 12/11/2026 às 16h29min29s (UTC−03:00).
+| Tipo de teste | Executados | Falhas | Erros | Ignorados |
+| --- | ---: | ---: | ---: | ---: |
+| Unitários | 32 | 0 | 0 | 0 |
+| Integração | 179 | 0 | 0 | 0 |
+| **Total** | **211** | **0** | **0** | **0** |
 
 ### Cobertura JaCoCo
 
-O relatório foi gerado e visualizado localmente em `target/site/jacoco/index.html`. A existência do arquivo também foi confirmada com `Test-Path`, que retornou `True`.
+O comando `Test-Path .\target\site\jacoco\index.html` retornou `True`. O arquivo foi aberto no navegador e apresentou os seguintes resultados:
 
-Resultados do relatório local:
+| Métrica | Resultado local |
+| --- | --- |
+| Instruções | 98% de cobertura, conforme o HTML |
+| Ramificações | 163 de 176 cobertas (92,61%). O HTML exibe 92%. |
+| Linhas | 371 de 380 cobertas (97,63%) |
+| Classes analisadas | 17 |
 
-- Cobertura de instruções: 98%.
-- Cobertura de ramificações: 92%, conforme exibição do HTML.
-- Linhas cobertas: 371 de 380, aproximadamente 97,63%.
-- Classes analisadas: 17.
+## Evidências do GitHub Actions
 
-### Evidência do GitHub Actions
+A execução [Qualidade #23](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609) passou no commit `f4a706f`. A tag `v1.0.0-rc1` foi publicada posteriormente apontando para esse mesmo commit.
 
-Foi identificada a execução Qualidade #23, concluída com sucesso e referente ao mesmo commit verificado:
+| Verificação | Resultado | Evidência |
+| --- | --- | --- |
+| Testes e cobertura | O job `tests` e a etapa de metas de cobertura passaram. O relatório JaCoCo do artifact foi conferido. | [Artifact testes-e-cobertura](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811152261) |
+| SonarCloud | A etapa “SonarCloud e quality gate” passou. | [Execução #23, job tests](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609) |
+| Testes no navegador | O job `e2e` passou. | [Artifact e2e](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13812235058) |
+| Carga | O job `load` passou, incluindo as rodadas de 10, 50 e 100 usuários e o resumo. O conteúdo detalhado do artifact não foi inspecionado nesta verificação. | [Artifact carga-jmeter](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811003153) |
 
-https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609
+Os testes manuais abrangeram a abertura da aplicação e o login admin. Cadastro, reservas e permissões dos perfis `RESPONSAVEL` e `SOLICITANTE` não foram registrados como testes manuais. Os resultados de E2E e carga vêm do CI. As mutações manuais permanecem identificadas pelo commit histórico em que foram executadas.
 
-Nessa execução, os jobs `tests`, `e2e` e `load` foram aprovados. Também passaram as etapas de metas de cobertura e “SonarCloud e quality gate”.
+## Publicação da versão candidata
 
-O relatório no artifact `testes-e-cobertura` foi conferido. O painel detalhado do SonarCloud e o conteúdo do artifact `carga-jmeter` não foram revisados nesta verificação.
+Em 12/11/2026, Carlos Daniel criou a tag anotada `v1.0.0-rc1` no commit testado e a enviou ao GitHub. O comando `git push origin refs/tags/v1.0.0-rc1` confirmou a criação da tag remota.
 
-Artifacts vinculados à execução:
+No commit marcado pela RC1, o arquivo `docs/entrega/checklist.md` ainda era o modelo em branco. O checklist preenchido foi registrado posteriormente na branch `docs/declaracoes`. Esta revisão documenta o teste da RC1 e precisa ser integrada à `main` para constar na documentação principal. Essa integração preserva a tag existente no commit que foi testado.
 
-- Testes e cobertura: https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811152261
-- E2E: https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13812235058
-- Carga: https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811003153
+## Fechamento documental
 
-### Preparação do fechamento documental
+Foi preparada a proposta técnica de **liberar a RC1 com ressalvas**, com base no clone limpo, nos 211 testes aprovados, na cobertura medida e no CI verde. A decisão final e a aceitação dos riscos cabem à equipe.
 
-Foram preparados:
+Também foi preparado um índice de evidências com os links do CI #23. A tentativa de gravar os textos da decisão e do índice pela integração do GitHub retornou `403`. A publicação da tag foi concluída pelo terminal. A incorporação desses dois textos deve ser conferida separadamente.
 
-- Uma proposta técnica de decisão de qualidade, com critérios, evidências, riscos e condições para o fechamento.
-- Um índice de evidências vinculado ao commit avaliado e à execução Qualidade #23.
-- A distinção entre resultados locais, resultados do CI e evidências históricas de carga e mutação.
+### Pendências
 
-A proposta técnica é liberar com ressalvas após conferir o commit final, criar a tag e obter a confirmação da equipe. Isso não representa aprovação coletiva nem publicação da versão.
+1. Integrar à `main` o checklist preenchido e as declarações dos integrantes que estão em `docs/declaracoes`.
+2. Registrar em `docs/decisao-qualidade.md` a tag `v1.0.0-rc1`, o SHA `f4a706f9de7b5547704cdb735dbcf156b0757bb9`, o link da execução #23, a data da decisão, a justificativa e os responsáveis pelos riscos.
+3. Atualizar a RTM, o relatório de qualidade, o status dos requisitos e o índice de evidências com os resultados do clone limpo e as referências da RC1. Registrar a publicação da tag no `CHANGELOG.md`.
+4. Alinhar a descrição da carga no plano de testes às três rodadas do CI. No plano de carga, corrigir a frase sobre a ausência de resultados e manter cada medição histórica associada ao seu commit.
+5. Confirmar as decisões sobre DV01 e OB02 e registrar o tratamento de D06, de P05 e da limitação de medir a carga na mesma máquina da aplicação.
+6. Se a equipe escolher entregar um commit posterior à RC1, conferir o CI desse novo commit e registrar a versão correspondente.
 
-A tentativa de salvar pelo acesso integrado ao GitHub retornou erro 403, sem alterar os arquivos. A incorporação dos textos ao repositório precisa ser confirmada.
+## Bloqueadores encontrados
 
-### Pendências documentais
+**Nenhum bloqueador técnico no clone limpo.** A aplicação abriu, o login admin funcionou e o Maven concluiu os testes com sucesso.
 
-- Salvar e conferir os textos preparados da decisão de qualidade e do índice de evidências, preservando as declarações dos integrantes.
-- Atualizar RTM, relatório de qualidade e status dos requisitos com o clone limpo e as referências finais.
-- Corrigir no plano de testes o caminho `bdd/aprovacao.feature` para `docs/bdd/aprovacao.feature` e alinhar a descrição da carga às rodadas de 10, 50 e 100 usuários.
-- Corrigir no plano de carga a frase “Sem resultado medido nesta entrega”, que contradiz os resultados apresentados no próprio documento.
-- Manter os resultados antigos da carga identificados pelos commits em que foram medidos.
-- Registrar a decisão da equipe sobre DV01 e confirmar OB02 na matriz de autorização.
-- Definir os responsáveis e confirmar a aceitação dos riscos D06, P05 e das limitações da medição de carga.
-- Definir o commit final da entrega e conferir seu CI completo.
-- Criar a tag anotada `v1.0.0-rc1` e registrar seu SHA e a execução correspondente.
-- Confirmar a decisão final da equipe e atualizar o CHANGELOG.
-
-Na consulta realizada em 12/11/2026, a tag `v1.0.0-rc1` não foi encontrada.
-
-### Limites da verificação
-
-A revisão documental identificou conteúdo e pendências, mas não validou integralmente a correspondência de toda a documentação com o código.
-
-Não foram registrados testes manuais de cadastro, reservas ou permissões dos perfis RESPONSAVEL e SOLICITANTE.
-
-Os testes históricos de mutação não foram repetidos. A carga e o E2E foram confirmados pelo resultado do CI, sem execução local desses procedimentos nesta verificação.
-
-As evidências registradas pertencem ao commit f4a706f9de7b5547704cdb735dbcf156b0757bb9. Se o commit final for diferente, seu CI deverá ser conferido antes da conclusão da entrega.
-
-## Bloqueadores encontrados (em ordem de gravidade)
-
-Nenhum bloqueador na inicialização, no login admin ou na execução local do Maven.
-
-O fechamento documental foi preparado, mas ainda depende da incorporação e conferência dos textos no repositório, da definição da tag e da confirmação da decisão e dos responsáveis pela equipe.
+A tag da versão testada está publicada e vinculada ao CI aprovado. Para o fechamento formal, restam a integração dos documentos e a confirmação da decisão de qualidade pela equipe.
