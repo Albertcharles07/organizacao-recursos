@@ -15,7 +15,7 @@ A coluna "Existe e caminho" foi preenchida a partir do repositório em 05/11/202
 | --- | --- | --- | --- |
 | README com instalação reproduzível | `README.md` | | Sim |
 | Aplicação sobe só com o README (`docker compose up --build -d`) | `compose.yaml`, `Dockerfile`, `.env.example` | | Sim |
-| `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `.mvn/wrapper/` | | Não conferido |
+| `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `.mvn/wrapper/` | | Sim |
 | Documentação da API | `docs/API.md` | | |
 | RTM | `docs/rtm.md` | | |
 | Diagramas de contexto, componentes e sequências críticas | `docs/ARQUITETURA.md` | | |
@@ -39,7 +39,11 @@ Observação para a verificação: o projeto usa o Maven Wrapper; não é precis
 
 A aplicação iniciou normalmente seguindo a seção “Começar pelo Docker” do README. Foi possível acessar http://localhost:8080 e entrar com o usuário admin. Não ocorreram erros durante esses passos.
 
-O comando de verificação do Maven não foi executado. Os demais artefatos e sua atualização não foram avaliados nesta verificação.
+O comando de verificação do Maven foi executado com Java 21.0.13 e terminou com BUILD SUCCESS. Foram executados 32 testes unitários e 179 testes de integração, totalizando 211 testes sem falhas, erros ou testes ignorados. O tempo total foi de 4min31s, com término em 12/11/2026 às 16h29min29s (UTC−03:00).
+
+O relatório JaCoCo foi gerado localmente. O artifact do CI indicado na tabela não foi conferido.
+
+Os demais artefatos e sua atualização não foram avaliados nesta verificação.
 
 ## Bloqueadores encontrados (em ordem de gravidade)
 
