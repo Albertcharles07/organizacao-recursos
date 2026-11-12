@@ -66,6 +66,19 @@ Recursos sem aprovação seguem automaticamente para APROVADA ao serem criados; 
 5. O pipeline exige as metas de cobertura e o quality gate. Sem credenciais/configuração ou sem atingir as metas, ficará vermelho: isso é uma pendência real, não deve ser ocultada.
 6. Baixe os artifacts do Actions e registre links/commit na RTM e no relatório final.
 
+## Equipe
+
+Projeto da disciplina Qualidade de Software (Centro Universitário Senac, 2026.2).
+
+| Integrante | GitHub | Papel no projeto |
+| --- | --- | --- |
+| Carlos Daniel de Souza Gomes | [@Viuzcd660](https://github.com/Viuzcd660) | Back-end, com apoio no front-end |
+| Charles Elias de Araújo | [@Albertcharles07](https://github.com/Albertcharles07) | Back-end, com apoio no front-end; dono do repositório |
+| João Pedro Dias Araújo | [@joaopda03](https://github.com/joaopda03) | Front-end |
+| Lucas Rodrigues de Magalhaes | [@lucasrmagalhaess](https://github.com/lucasrmagalhaess) | Auditoria e testes (QA) |
+
+A divisão acima indica a responsabilidade principal de cada um. Na prática, os integrantes se ajudaram entre as áreas. As revisões cruzadas ficam registradas nos PRs.
+
 ## Estrutura e documentação
 
 - `src/main/java`: API, domínio, segurança, notificações.
