@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.0.0-rc1 (a criar na Aula 14)
+## v1.0.0-rc1 (12/11/2026)
+
+Tag anotada no commit `f4a706f`, com CI aprovado ("Qualidade #23"). Decisão de qualidade: liberar com ressalvas (`docs/decisao-qualidade.md`).
 
 Primeira versão candidata. Itens integrados desde a versão inicial de 25/10/2026:
 

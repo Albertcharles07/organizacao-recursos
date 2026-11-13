@@ -1,18 +1,18 @@
 # Relatório de qualidade
 
-Atualizado em **10/11/2026** com as execuções do GitHub Actions. Substitui a versão de 24/10/2026, que só tinha uma execução local parcial (Java 17, sem Docker).
+Atualizado em **12/11/2026** para a versão candidata `v1.0.0-rc1` (commit `f4a706f`). Substitui a versão de 24/10/2026, que só tinha uma execução local parcial (Java 17, sem Docker).
 
 ## Decisão
 
-**Ainda não liberado.** A suíte completa passa no CI, a cobertura passou da meta com folga, o teste de carga foi aprovado, as 10 mutações das regras críticas foram detectadas e o quality gate do SonarCloud está aprovado. Os PRs da fila foram integrados na `main` em 10/11/2026, e o CI da `main` passou. Com a correção do D09, o SonarCloud deu nota de segurança A e 0 issues. Falta repetir o CI completo no commit da tag. A decisão final será registrada em `docs/decisao-qualidade.md` no commit da tag `v1.0.0-rc1`.
+**Liberado com ressalvas** (decisão da equipe em 12/11/2026, registrada em `docs/decisao-qualidade.md`). No commit da tag, o CI "Qualidade #23" passou com a suíte completa, E2E, carga e quality gate do SonarCloud, e o clone limpo subiu seguindo só o README, com `./mvnw -B verify` passando. As 10 mutações das regras críticas foram detectadas e o SonarCloud está com nota de segurança A. As ressalvas são os riscos aceitos: P05, D06, DV01, OB02 e a carga medida na mesma máquina da aplicação.
 
 ## Resultado em números
 
 | Métrica | Meta | Resultado | Evidência |
 | --- | --- | --- | --- |
-| Cobertura de linhas | 80% | **97,63%** (371 de 380) | CI da `main`, commit `7a037b3` |
-| Cobertura de branches | 70% | **92,61%** (163 de 176) | CI da `main`, commit `7a037b3` |
-| Testes automatizados | 100% passando | **211 de 211** | CI da `main`, commit `7a037b3` |
+| Cobertura de linhas | 80% | **97,63%** (371 de 380) | Clone limpo e CI "Qualidade #23", commit `f4a706f` (tag) |
+| Cobertura de branches | 70% | **92,61%** (163 de 176) | Clone limpo e CI "Qualidade #23", commit `f4a706f` (tag) |
+| Testes automatizados | 100% passando | **211 de 211** | Clone limpo e CI "Qualidade #23", commit `f4a706f` (tag) |
 | Mutações das regras críticas detectadas | 100% | **10 de 10** | `docs/testes/mutacao-manual.md` |
 | Dupla reserva sob carga | 1 reserva por rodada | **1 em 1** com 10, 50 e 100 usuários, em duas execuções; p95 até 487 ms | `docs/performance/resultado-01.md` |
 | Requisitos críticos na RTM com evidência | 100% | **100%** | `docs/rtm.md` |
@@ -23,7 +23,9 @@ Atualizado em **10/11/2026** com as execuções do GitHub Actions. Substitui a v
 
 | Execução | Data | Commit | Testes | Linhas | Branches | Observação |
 | --- | --- | --- | --- | --- | --- | --- |
-| CI do grupo, push na `main` ("Qualidade #21") | 10/11/2026 | `7a037b3` | 211, 0 falhas | 97,63% | 92,61% | **Referência atual**: `main` com os PRs #4 a #9; `tests`, `e2e` e `load` aprovados |
+| CI do grupo, commit da tag `v1.0.0-rc1` (["Qualidade #23"](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609)) | 12/11/2026 | `f4a706f` | 211, 0 falhas | meta aprovada | meta aprovada | **Referência da entrega**: `tests`, `e2e` e `load` aprovados |
+| Clone limpo (Carlos, Windows, Docker 29.9.2, Java 21) | 12/11/2026 | `f4a706f` | 211, 0 falhas | 97,63% | 92,61% | Aplicação subiu seguindo só o README; nenhum bloqueador |
+| CI do grupo, push na `main` ("Qualidade #21") | 10/11/2026 | `7a037b3` | 211, 0 falhas | 97,63% | 92,61% | `main` com os PRs #4 a #9; mesmo código da tag |
 | CI do grupo, PR #4 ("Qualidade #16") | 10/11/2026 | `52fbd3d` | — | — | — | `e2e` falhou: secret `ADMIN_PASSWORD` curto (defeito D10), corrigido |
 | Validação no fork (PR #2 do fork) | 05/11/2026 | `2801221` | 208, 0 falhas | 97,65% | 92,53% | Validação com todos os PRs da fila; E2E e carga aprovados |
 | Validação no fork | 05/11/2026 | `be6fda0` | 208, 0 falhas | 97,65% | 92,53% | Job de carga falhou ao baixar o JMeter (defeito D08), corrigido |
@@ -85,14 +87,11 @@ A cobertura do SonarCloud (96,0%) é um pouco menor que a do JaCoCo no CI (97,63
 
 ## Defeitos
 
-Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Fechados também o **P03**, com o SonarCloud no CI, o **P04**, com os PRs #4 a #9 aprovados e integrados em 10/11/2026, e o **D10** (secret `ADMIN_PASSWORD` curto no CI). Fechado também o **D09** (SQL montado por concatenação), com nota de segurança A no SonarCloud. Abertos: **P05** (webhook sem nova tentativa, limitação aceita) e **D06** (`Rules.overlaps` não é usado pela aplicação, baixa prioridade).
+Registro completo em `docs/defeitos/README.md`. Fechados nesta revisão, cada um com a execução que comprova: D01 a D05, D07, D08, P01 e P02. Fechados também o **P03**, com o SonarCloud no CI, o **P04**, com os PRs #4 a #9 aprovados e integrados em 10/11/2026, e o **D10** (secret `ADMIN_PASSWORD` curto no CI). Fechado também o **D09** (SQL montado por concatenação), com nota de segurança A no SonarCloud. Aceitos como riscos, com responsável em `docs/decisao-qualidade.md`: **P05** (webhook sem nova tentativa) e **D06** (`Rules.overlaps` não é usado pela aplicação).
 
 ## Pendências para a liberação
 
-| Pendência | Responsável | Impacto se ficar de fora |
-| --- | --- | --- |
-| Repetir o CI completo no commit da tag | Equipe | A evidência final precisa ser do commit entregue |
-| Checklist de clone limpo | Integrante com Docker | Bloqueadores do README só aparecem num clone do zero |
+Nenhuma. O CI foi repetido no commit da tag ("Qualidade #23") e o checklist de clone limpo foi feito em 12/11/2026 sem bloqueadores (`docs/entrega/checklist.md`).
 
 ## Como reproduzir
 

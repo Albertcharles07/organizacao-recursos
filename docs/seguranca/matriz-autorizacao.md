@@ -24,7 +24,7 @@ Todas as requisições enviam token CSRF válido, para que o resultado reflita a
 | M10 | Criar usuário | POST /api/users | 401 | 403 | 403 | 200 | |
 | M11 | Ativar ou desativar usuário | PUT /api/users/{id}/enabled | 401 | 403 | 403 | 200 | |
 | M12 | Listar reservas | GET /api/bookings | 401 | 200 | 200 | 200 | Solicitante vê só as próprias (teste de posse) |
-| M13 | Criar reserva | POST /api/bookings | 401 | 200 | 200 | 200 | **A confirmar**: ver divergência DV01 |
+| M13 | Criar reserva | POST /api/bookings | 401 | 200 | 200 | 200 | Decisão DV01 (12/11/2026): Responsável e Administrador também criam reservas |
 | M14 | Alterar reserva | PUT /api/bookings/{id} | 401 | 200 | 403 | 403 | Só o dono altera; reserva da `ana` |
 | M15 | Cancelar reserva | POST /api/bookings/{id}/state CANCELADA | 401 | 200 | 200 | 403 | Dono ou Responsável; reserva da `ana` |
 | M16 | Aprovar recurso restrito | POST /api/bookings/{id}/state APROVADA | 401 | 403 | 200 | 403 | Só o Responsável aprova |
@@ -73,10 +73,10 @@ interna.
 
 | ID | Tipo | Descrição | Situação |
 | --- | --- | --- | --- |
-| DV01 | Decisão de escopo | A especificação diz que o Solicitante cria reservas, mas o código permite que Responsável e Administrador também criem (M13). A matriz registra o comportamento atual. | A equipe decide: manter (e registrar em ADR) ou restringir e mudar M13 para 403 |
+| DV01 | Decisão de escopo | A especificação diz que o Solicitante cria reservas, mas o código permite que Responsável e Administrador também criem (M13). A matriz registra o comportamento atual. | **Decidido em 12/11/2026:** manter. Gestores também precisam reservar recursos; M13 fica como está. Risco aceito em `docs/decisao-qualidade.md` (responsável: João Pedro Dias Araújo) |
 | RS01 | Risco de projeto | O `SecurityConfig` só exige "estar logado" para `/api/**`. **Nenhuma rota tem regra por perfil na configuração de segurança**: toda checagem de perfil está dentro do `ApiController` (métodos `admin()`, `responsible()` e `has()`). Um endpoint novo sem essa chamada fica aberto a qualquer usuário logado. | Mitigado por esta matriz: um endpoint novo sem linha aqui não é testado, então toda rota nova deve ganhar uma linha |
 | OB01 | Observação | As respostas de erro usam um corpo próprio `{"status","message"}`, e não o formato padrão `ProblemDetail` (RFC 9457) do Spring. Atende ao requisito de não expor detalhes internos. | Melhoria opcional |
-| OB02 | Observação | `GET /api/maintenance` não verifica perfil: qualquer usuário logado vê os bloqueios e o motivo. Parece intencional (o Solicitante precisa saber por que um recurso está indisponível). | Confirmar com a equipe |
+| OB02 | Observação | `GET /api/maintenance` não verifica perfil: qualquer usuário logado vê os bloqueios e o motivo. Parece intencional (o Solicitante precisa saber por que um recurso está indisponível). | **Decidido em 12/11/2026:** manter. O Solicitante precisa saber por que um recurso está indisponível; o motivo não deve conter dado pessoal. Risco aceito em `docs/decisao-qualidade.md` (responsável: João Pedro Dias Araújo) |
 
 Se alguma célula falhar no CI, a falha vira um defeito registrado em `docs/defeitos/README.md` **antes** da correção, e a
 correção vai em commit próprio que cita o defeito. Nenhuma célula deve ser removida ou alterada só para o teste passar.

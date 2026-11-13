@@ -1,6 +1,6 @@
 # Status dos requisitos
 
-Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o código, os testes e a RTM (`docs/rtm.md`). Um item só é **feito** quando existe teste que falharia se a regra fosse quebrada; nas regras críticas isso foi confirmado pela mutação manual (`docs/testes/mutacao-manual.md`). Execução de referência: CI da `main` no repositório do grupo ("Qualidade #21", commit `7a037b3`, 10/11/2026), 211 testes passando, E2E e carga aprovados.
+Diagnóstico de **05/11/2026** (Aula 11), atualizado em 12/11/2026 para a versão `v1.0.0-rc1`, comparando a especificação com o código, os testes e a RTM (`docs/rtm.md`). Um item só é **feito** quando existe teste que falharia se a regra fosse quebrada; nas regras críticas isso foi confirmado pela mutação manual (`docs/testes/mutacao-manual.md`). Execução de referência: CI do commit da tag `v1.0.0-rc1` ("Qualidade #23", commit `f4a706f`, 12/11/2026), 211 testes passando, E2E e carga aprovados.
 
 ## Requisitos funcionais
 
@@ -28,23 +28,14 @@ Diagnóstico de **05/11/2026** (Aula 11), comparando a especificação com o có
 | Término posterior ao início | Feito | `RulesTest.invalidIntervals`, `CHECK(end_at>start_at)`; mutação 10 | Intervalo inválido gravado |
 | Reserva iniciada não pode ser excluída nem cancelada | Feito | `startedBookingAndMaterialLifecycle`, `HistoricoEstadosIT.reservaIniciadaNaoPodeSerCanceladaNemExcluida` | Perda de histórico |
 | Toda mudança de estado gera auditoria | Feito | `HistoricoEstadosIT.cicloCompletoGeraUmRegistroPorMudanca`, `falhaNaTransacaoNaoDeixaHistoricoOrfao`; mutação 08 | Rastreio incompleto |
-| Cobertura 80% linhas e 70% branches | Feito | 97,63% e 92,61% no CI da `main`, commit `7a037b3` | Nota de cobertura |
+| Cobertura 80% linhas e 70% branches | Feito | 97,63% e 92,61% no clone limpo do commit da tag (`f4a706f`); meta aprovada no CI "Qualidade #23" | Nota de cobertura |
 | Desempenho e robustez sob concorrência | Feito | `docs/performance/resultado-01.md` (p95 até 487 ms com 100 usuários) | Sem evidência de desempenho |
 | Zero bugs e vulnerabilidades críticas (SonarCloud) | Feito | Quality gate aprovado na `main` (10/11/2026): 0 issues, nota de segurança A; as 2 issues médias do D09 foram fechadas | Vulnerabilidade sem detecção |
-| Revisão por pares | Feito | PRs #2 a #9 revisados e aprovados no GitHub antes do merge; integrados na `main` com merge commit (10/11/2026) | Critério de autoria e revisão |
+| Revisão por pares | Feito | PRs #2 a #11 revisados e aprovados no GitHub antes do merge; integrados na `main` com merge commit | Critério de autoria e revisão |
 
 ## Pendências, em ordem de impacto
 
 1. **Pipeline verde (limitador de nota):** feito em 06/11/2026: repositório público, SonarCloud no CI e os três checks verdes no PR #4. Em 10/11/2026, com a correção do D09 na `main`, a nota de segurança voltou a A.
-2. **Aplicação executável para o professor (limitador de nota):** repositório público e checklist de clone limpo (`docs/entrega/checklist.md`) feito por alguém que siga só o README.
+2. **Aplicação executável para o professor (limitador de nota):** feito em 12/11/2026. O checklist de clone limpo (`docs/entrega/checklist.md`) subiu a aplicação seguindo só o README, sem bloqueadores.
 3. **Integrar os PRs na `main`:** feito em 10/11/2026. PRs #4 a #9 aprovados e integrados na ordem da fila, com merge commit.
-4. **CI completo no repositório do grupo:** feito em 10/11/2026 na `main` ("Qualidade #21"). Falta repetir no commit da tag `v1.0.0-rc1`.
-
-## Divisão sugerida até a semana 46
-
-| Pendência | Responsável |
-| --- | --- |
-| Revisão e merge dos PRs | Integrantes que não abriram o PR |
-| Checklist de clone limpo | Integrante com Docker funcionando |
-| Leitura do SonarCloud e registro de defeitos | Auditoria (Lucas) |
-| Tag, pacote de evidências e decisão de qualidade | Toda a equipe na Aula 14 |
+4. **CI completo no repositório do grupo:** feito em 10/11/2026 na `main` ("Qualidade #21"). Repetido em 12/11/2026 no commit da tag `v1.0.0-rc1` ("Qualidade #23"): aprovado.

@@ -4,7 +4,7 @@
 
 Cenário principal: 50 sessões autenticadas disputam a mesma sala e o mesmo intervalo. Recurso criado exclusivamente para a rodada. Esperado: **1 resposta 200, 49 respostas 409, uma única reserva persistida**. HTTP 409 é conflito de negócio esperado, não falha técnica. Login ou CSRF falho invalida a rodada.
 
-Meta inicial de desempenho: p95 de `Reserva concorrente` < 2000 ms, sem 5xx. Essa meta é proposta para laboratório e deve ser validada com o professor. Sem resultado medido nesta entrega.
+Meta inicial de desempenho: p95 de `Reserva concorrente` < 2000 ms, sem 5xx. Essa meta é proposta para laboratório e deve ser validada com o professor. Resultados medidos na seção "Resultado" abaixo e em `docs/performance/resultado-01.md`.
 
 ## Preparação e execução
 
