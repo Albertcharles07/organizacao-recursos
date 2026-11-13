@@ -1,28 +1,32 @@
 # Índice de evidências
 
-Todas as evidências da entrega, com o lugar onde cada uma está. Na entrega final, cada link deve apontar para a execução do CI **no commit da tag `v1.0.0-rc1`** no repositório do grupo; as execuções abaixo são as de 05/11/2026, feitas no fork de validação e no repositório do grupo antes da tag.
+Evidências da versão candidata [`v1.0.0-rc1`](https://github.com/Albertcharles07/organizacao-recursos/tree/v1.0.0-rc1), commit [`f4a706f`](https://github.com/Albertcharles07/organizacao-recursos/commit/f4a706f9de7b5547704cdb735dbcf156b0757bb9). A execução do CI desse commit é a [Qualidade #23](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609), com os jobs `tests`, `e2e` e `load` aprovados. Os documentos citados abaixo foram atualizados depois da tag, sem mudança de código, para registrar o resultado dessa execução e do clone limpo.
 
-| Evidência | Onde está | Situação em 05/11/2026 |
+## Evidências da versão
+
+| Evidência | Onde está | Resultado no commit da tag |
 | --- | --- | --- |
-| Execução do CI (testes, cobertura, E2E e carga) | Aba Actions do repositório, workflow "Qualidade"; anotação "Resumo dos testes" de cada execução | 211 testes, E2E e carga passando na `main` do grupo, "Qualidade #21", commit `7a037b3` (print: `ci-main-21.png`) |
-| Relatório do JaCoCo | Artifact `testes-e-cobertura` de cada execução; cópias em `docs/evidencias/ci-qualidade-1/` e `ci-qualidade-2/` | 97,65% linhas, 92,53% branches |
-| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do CI e projeto no SonarCloud | Aprovado (10/11/2026): 0 issues, nota de segurança A (print: `sonarcloud-main-2026-11-10.png`) |
-| Resultado da carga | `docs/performance/resultado-01.md`; artifact `carga-jmeter` | Aprovado |
-| Mutação manual | `docs/testes/mutacao-manual.md` | 10 de 10 detectadas |
-| Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | 30 operações × 4 perfis passando |
-| Status dos requisitos | `docs/status-requisitos.md` | 14 de 14 feitos; SonarCloud com nota A |
-| RTM | `docs/rtm.md` | 100% dos críticos com evidência |
-| Defeitos | `docs/defeitos/README.md` | D01 a D05, D07, P01 e P02 fechados |
-| Relatório de qualidade | `docs/relatorio-qualidade.md` | Ainda não liberado |
-| Resumo legível por máquina | `docs/evidencias/resumo.json` | Todas as execuções |
-| Execução local antiga (sem Docker) | `docs/evidencias/local-2026-10-23/` | Histórico; substituída pelo CI |
+| Execução do CI no commit da tag | [Qualidade #23](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609) | 211 testes, 0 falhas; `tests`, `e2e` e `load` aprovados |
+| Relatório do JaCoCo | [Artifact `testes-e-cobertura`](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811152261) do CI #23 | Meta de cobertura aprovada no CI; 97,63% das linhas e 92,61% dos branches medidos no clone limpo, no mesmo commit |
+| Quality gate do SonarCloud | Passo "SonarCloud e quality gate" do [CI #23](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609); painel do projeto no SonarCloud | Aprovado. Última análise do painel (10/11/2026, mesmo código): 0 issues e nota de segurança A (print: `sonarcloud-main-2026-11-10.png`) |
+| Testes no navegador (E2E) | [Artifact `e2e`](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13812235058) do CI #23 | Aprovado |
+| Resultado da carga | [Artifact `carga-jmeter`](https://github.com/Albertcharles07/organizacao-recursos/actions/runs/42920021609/artifacts/13811003153) do CI #23; `docs/performance/resultado-01.md` | Aprovado: 1 reserva aceita por rodada com 10, 50 e 100 usuários (o job falha se aceitar mais de uma) |
+| Clone limpo | `docs/entrega/checklist.md` | Aplicação subiu seguindo só o README; `./mvnw -B verify` com 211 testes; nenhum bloqueador |
+| RTM | `docs/rtm.md` | 100% dos requisitos críticos com evidência |
+| Defeitos | `docs/defeitos/` | D01 a D05, D07 a D10 e P01 a P04 fechados; D06 e P05 aceitos como riscos |
+| Relatório de qualidade | `docs/relatorio-qualidade.md` | Liberado com ressalvas |
+| Decisão de qualidade | `docs/decisao-qualidade.md` | Liberar com ressalvas, com os riscos aceitos e as declarações dos integrantes |
+| Mutação manual | `docs/testes/mutacao-manual.md` | 10 de 10 detectadas (execução de 05/11/2026; as regras críticas não mudaram depois) |
+| Matriz de autorização | `docs/seguranca/matriz-autorizacao.md` | 30 operações × 4 perfis, executada no CI #23 |
+| Status dos requisitos | `docs/status-requisitos.md` | 14 de 14 feitos |
 
-## Como atualizar na Aula 14
+## Histórico
 
-1. Criar a tag anotada `v1.0.0-rc1` no commit avaliado da `main` e enviá-la.
-2. Abrir a execução do CI desse commit e copiar o link para a primeira linha da tabela.
-3. Conferir que o quality gate do SonarCloud aparece verde e colocar o link na terceira linha.
-4. Atualizar a coluna "Situação" com os números dessa execução, sem copiar números de execuções antigas.
+| Evidência | Onde está | Observação |
+| --- | --- | --- |
+| CI da `main` antes da tag | "Qualidade #21", commit `7a037b3` (print: `ci-main-21.png`) | Mesmo código da tag; antes do PR #10, que só mudou documentação |
+| Execuções no fork de validação | `docs/evidencias/resumo.json`, `ci-qualidade-1/`, `ci-qualidade-2/` | Execuções de 25/10 a 05/11/2026 |
+| Execução local antiga (sem Docker) | `docs/evidencias/local-2026-10-23/` | Substituída pelo CI |
 
 ## TDD (red e green)
 

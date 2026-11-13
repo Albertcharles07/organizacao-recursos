@@ -14,7 +14,7 @@ Demonstrar correção funcional, autorização, integridade concorrente e rastre
 | Concorrência HTTP | simultaneousRequestsAcceptOnlyOne | Barreira entre threads, exatamente 1 sucesso + 1 conflito e 1 reserva persistida |
 | API caixa-preta | BlackBoxIT | HTTP real, cookie, login, CSRF renovado, cadastro e consulta |
 | End-to-end | e2e/reservas.spec.js | Login, cadastro, reserva e layout móvel no navegador real |
-| Carga | load/reservas.jmx | 50 threads sincronizadas: 1 sucesso e 49 conflitos |
+| Carga | load/reservas.jmx | Três rodadas no CI (10, 50 e 100 usuários sincronizados): em cada uma, 1 sucesso e os demais 409 |
 | Estática | SonarCloud | Nenhum bug/vulnerabilidade crítica e quality gate |
 
 Mocks de banco não são usados. O Testcontainers não está configurado para ignorar testes sem Docker: ausência de Docker deve falhar explicitamente em `verify`.

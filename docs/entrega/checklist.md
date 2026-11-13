@@ -15,6 +15,7 @@ A coluna “Existe e caminho” foi preenchida originalmente em 05/11/2026. Em 1
 
 | Item exigido | Existe e caminho | Atualizado? | Conferido no clone? |
 | --- | --- | --- | --- |
+| Repositório com revisão por pares | PRs #2 a #12 no GitHub | Sim. Cada PR foi aprovado por outro integrante antes do merge, com merge commit. Item incluído em 12/11/2026 pela auditoria, porque o roteiro da Aula 14 o exige. | Conferido no GitHub (histórico de PRs) |
 | README com instalação reproduzível | `README.md` | Sim para o fluxo testado. As instruções permitiram iniciar a aplicação e entrar como admin. | Sim — instruções executadas |
 | Aplicação sobe só com o README | `compose.yaml`, `Dockerfile`, `.env.example` | Sim. A aplicação iniciou com `docker compose up --build -d`. | Sim — inicialização e login |
 | `./mvnw -B verify` passa | `pom.xml`, `mvnw`, `mvnw.cmd`, `.mvn/wrapper/` | Sim. O Maven terminou com `BUILD SUCCESS` e 211 testes aprovados. | Sim — comando executado |
